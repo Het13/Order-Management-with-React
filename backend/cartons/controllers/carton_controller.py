@@ -1,4 +1,5 @@
 from flask import jsonify
+
 from backend.cartons.services.cartonServices import get_optimal_carton
 from backend.middleware.authorizaton import token_required, roles_required
 from backend.middleware.custom_errors import NotFoundError, DatabaseError, EmptyResult
@@ -7,12 +8,12 @@ from backend.middleware.custom_errors import NotFoundError, DatabaseError, Empty
 @token_required
 @roles_required('admin')
 def optimal_carton(order_id):
-	try:
-		carton = get_optimal_carton(order_id)
-		return jsonify(success={'carton': {'id': carton['id'], 'volume': carton['volume']}}), 200
-	except EmptyResult:
-		return jsonify(failed={'message': 'No optimal carton found'}), 200
-	except NotFoundError:
-		return jsonify(failed={'message': 'Order not found'}), 404
-	except DatabaseError:
-		return jsonify(failed={'message': 'Failed to fetch carton'})
+    try:
+        carton = get_optimal_carton(order_id)
+        return jsonify({"status": "success", 'carton': {'id': carton['id'], 'volume': carton['volume']}}), 200
+    except EmptyResult:
+        return jsonify({"status": "failed", 'message': 'No optimal carton found'}), 200
+    except NotFoundError:
+        return jsonify({"status": "failed", 'message': 'Order not found'}), 404
+    except DatabaseError:
+        return jsonify({"status": "failed", 'message': 'Failed to fetch carton'})
