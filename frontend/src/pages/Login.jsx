@@ -1,14 +1,40 @@
 import {useForm} from "react-hook-form";
+import {yupResolver} from "@hookform/resolvers/yup";
+import * as yup from "yup";
+import {Link, useNavigate} from "react-router-dom";
+
+
+const schema = yup
+    .object({
+        email: yup.string()
+            .email("Invalid Email")
+            .required("Email required"),
+        password: yup.string()
+            .min(8, "Password must be 8 characters long")
+            .matches(/(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?!.*\s)(?=.*[!@#$*])/, {
+                message: "Password should contain at least one uppercase letter, lowercaseletter, digit and special symbol."
+            })
+            .required("Password required")
+    })
+    .required()
 
 const Login = () => {
     const {
         register,
         handleSubmit,
         formState: {errors}
-    } = useForm()
+    } = useForm({
+        resolver: yupResolver(schema)
+    })
 
     const onSubmit = (data) => {
         console.log(data)
+    }
+
+    let navigate = useNavigate();
+    const routeChange = () => {
+        let path = '/cart';
+        navigate(path)
     }
     return (
         <form className="w-25 m-auto my-5 " onSubmit={handleSubmit(onSubmit)}>
@@ -16,19 +42,13 @@ const Login = () => {
 
             <div className="form-floating">
                 <input
-                    type="email"
+                    type="text"
                     className="form-control"
                     id="floatingInput"
                     placeholder="name@example.com"
-                    {...register("email", {
-                        required: "Email is required",
-                        pattern: {
-                            value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
-                            message: "Invalid Email"
-                        }
-                    })}
+                    {...register("email")}
                 />
-                {errors.email && <p className="error-message">{errors.email.message}</p>}
+                <p className="pt-2">{errors.email?.message}</p>
                 <label htmlFor="floatingInput">Email address</label>
             </div>
             <div className="form-floating">
@@ -37,35 +57,17 @@ const Login = () => {
                     className="form-control"
                     id="floatingPassword"
                     placeholder="Password"
-                    {...register("password", {
-                        required: "Password is Required",
-                        validate: {
-                            checkLength: (value) => value.length >= 6,
-                            checkPattern: (value) => /(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?!.*\s)(?=.*[!@#$*])/.test(value)
-                        }
-                    })}
+                    {...register("password")}
                 />
-                {errors.password?.type === "required" && (
-                    <p className="errorMsg">Password is required.</p>
-                )}
-                {errors.password?.type === "checkLength" && (
-                    <p className="errorMsg">
-                        Password should be at-least 6 characters.
-                    </p>
-                )}
-                {errors.password?.type === "checkPattern" && (
-                    <p className="errorMsg">
-                        Password should contain at least one uppercase letter, lowercase
-                        letter, digit, and special symbol.
-                    </p>
-                )}
+                <p>{errors.password?.message}</p>
                 <label htmlFor="floatingPassword">Password</label>
             </div>
-
-            <button className="btn btn-primary w-100 py-2 my-4" type="submit">Sign in</button>
-            {/*<div className="form-floating w-100">*/}
-            {/*    <a href="#" onClick={}>Sign Up</a>*/}
-            {/*</div>*/}
+            <div className="text-center">
+                <button className="btn btn-outline-success w-50 py-2 mt-4" type="submit">Sign in</button>
+            </div>
+            <div className="text-center">
+                <Link to="/signup" className="btn btn-outline-dark w-50 py-2 mt-2">Sign up</Link>
+            </div>
         </form>
     );
 
