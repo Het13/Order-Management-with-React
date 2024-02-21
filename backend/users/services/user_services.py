@@ -15,7 +15,7 @@ def add(data, role):
     connection = connection_pool.get_connection()
     database_cursor = connection.cursor()
     try:
-        query = 'INSERT INTO USERS(EMAIL,PASSWORD,ROLES) VALUES(%s,%s,%s)'
+        query = 'INSERT INTO USERS(EMAIL,PASSWORD,ROLE) VALUES(%s,%s,%s)'
         database_cursor.execute(query, (data['email'], hashed_password, role))
         connection.commit()
     except:
@@ -73,7 +73,7 @@ def change_roles(new_role, user_id):
     database_cursor = connection.cursor()
 
     try:
-        query = 'UPDATE USERS SET ROLES=%s WHERE ID=%s'
+        query = 'UPDATE USERS SET ROLE=%s WHERE ID=%s'
         database_cursor.execute(query, (new_role, user_id))
         if database_cursor.rowcount == 0:
             raise NotFoundError
@@ -92,7 +92,7 @@ def get_role(email):
     database_cursor = connection.cursor()
 
     try:
-        query = 'SELECT ROLES FROM USERS WHERE EMAIL=%s'
+        query = 'SELECT ROLE FROM USERS WHERE EMAIL=%s'
 
         database_cursor.execute(query, (email,))
 
