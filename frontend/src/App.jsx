@@ -5,7 +5,7 @@ import {Home} from "./pages/Home";
 import MyCart from "./pages/MyCart";
 import Footer from "./components/Footer";
 import Login from "./pages/Login";
-import {Register} from "./pages/Register";
+import Register from "./pages/Register";
 
 function App() {
     return (

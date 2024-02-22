@@ -24,7 +24,7 @@ function Header() {
                                 <Link className="nav-link" to='/cart'>My Cart</Link>
                             </li>
                             <li className="nav-item">
-                                <Link className="nav-link" to='/signup'>Login/Sign Up</Link>
+                                <Link className="nav-link" to='/register'>Login/Sign Up</Link>
                             </li>
                         </ul>
                     </div>
