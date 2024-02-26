@@ -46,7 +46,7 @@ def login_user():
     database_cursor = connection.cursor()
 
     try:
-        query = 'SELECT EMAIL,PASSWORD FROM USERS WHERE EMAIL = %s'
+        query = 'SELECT EMAIL,PASSWORD,CUSTOMER_ID FROM USERS WHERE EMAIL = %s'
         database_cursor.execute(query, (user,))
         result = database_cursor.fetchone()
         if result is None:
@@ -54,11 +54,12 @@ def login_user():
         else:
             email = result[0]
             password = result[1]
+            customer_id = result[2]
         print(password)
 
         if check_password_hash(password, auth.password):
             token = encode_token(user)
-            return token, email
+            return token, email, customer_id
         raise LoginError
 
     except LoginError:
