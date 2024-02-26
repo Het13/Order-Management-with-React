@@ -2,11 +2,13 @@ import {useForm} from "react-hook-form";
 import {useEffect, useState} from "react";
 import {registerSchema} from "../yupSchemas";
 import {yupResolver} from "@hookform/resolvers/yup";
-import {Link} from "react-router-dom";
+import {Link, redirect} from "react-router-dom";
 import {City, Country, State} from 'country-state-city';
+import axios from "axios";
 
 
 const Register = () => {
+    const [messageToShow, setMessageToShow] = useState('')
     const [country, setCountry] = useState('');
     const [state, setState] = useState('');
 
@@ -22,11 +24,50 @@ const Register = () => {
         resolver: yupResolver(registerSchema)
     })
 
-    const onSubmit = (data) => console.log(data)
+    async function registerCustomer(data) {
+        const user_details = {
+            "first_name": data.firstName,
+            "last_name": data.lastName,
+            "email": data.email,
+            "password": data.password,
+            "phone": data.phone,
+            "address": {
+                "address_line_1": data.addressLine1,
+                "address_line_2": data.addressLine2,
+                "city": data.city,
+                "state": data.state,
+                "pincode": data.pincode,
+                "country": data.country
+            },
+            "username": data.username,
+            "gender": data.gender
+        }
+        return await axios.post("/api/v1/customers", user_details);
+    }
+
+    const onSubmit = async (data) => {
+        console.log(data)
+        const response = await registerCustomer(data)
+        console.log(response.data)
+        if (response.data.status === "success") {
+            setMessageToShow("Registered Successfully. Redirecting to Login Page")
+            setTimeout(() => {
+                return redirect('/login')
+            }, 3000)
+        } else {
+            let message = response.data.message;
+            if (message.toLowerCase() === "Duplicate email".toLowerCase()) {
+                setMessageToShow("You already have an account. Try logging in.")
+            } else {
+                setMessageToShow("Some error occurred. Try again.")
+            }
+        }
+    }
 
 
     return (
         <form className="w-50 m-auto my-5 " onSubmit={handleSubmit(onSubmit)}>
+            <h6 style={{color: "red"}}>Message={messageToShow}</h6>
             <h1 className="h3 mb-3 fw-normal">Register</h1>
             <div className="row">
                 <div className="col form-floating ">
@@ -171,7 +212,7 @@ const Register = () => {
                 <div className="col form-floating">
                     <select
                         className="form-control"
-                        name="country"
+                        name="state"
                         {...register("state")}
                         onChange={(e) => {
                             const index = e.target.selectedIndex
@@ -191,7 +232,7 @@ const Register = () => {
                 <div className="col form-floating">
                     <select
                         className="form-control"
-                        name="country"
+                        name="city"
                         {...register("city")}
 
                     >

@@ -31,6 +31,7 @@ def encode_token(user):
         'email': user
     }
     token = jwt.encode(payload, SECRET_KEY, algorithm='HS256')
+    print(token)
     return token
 
 
@@ -45,16 +46,19 @@ def login_user():
     database_cursor = connection.cursor()
 
     try:
-        query = 'SELECT PASSWORD FROM USERS WHERE EMAIL = %s'
+        query = 'SELECT EMAIL,PASSWORD FROM USERS WHERE EMAIL = %s'
         database_cursor.execute(query, (user,))
-        password = database_cursor.fetchone()[0]
-
-        if password == "":
+        result = database_cursor.fetchone()
+        if result is None:
             raise NotFoundError
+        else:
+            email = result[0]
+            password = result[1]
+        print(password)
 
         if check_password_hash(password, auth.password):
             token = encode_token(user)
-            return token
+            return token, email
         raise LoginError
 
     except LoginError:

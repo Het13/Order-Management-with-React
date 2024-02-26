@@ -3,7 +3,7 @@ import axios from "axios";
 import Product from "../components/Product";
 import DropdownItem from "../components/DropdownItem";
 import {connect} from "react-redux";
-import {addToCart, removeFromCart} from "../redux/actions";
+import {addToCart, removeFromCart} from "../redux/actions/actions";
 
 
 function ProductCatalogue({cart, addToCart, removeFromCart}) {

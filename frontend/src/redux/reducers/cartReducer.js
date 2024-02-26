@@ -1,5 +1,10 @@
-import {combineReducers} from 'redux';
-import {CART_EMPTIED, PRODUCT_ADDED, PRODUCT_REMOVED, QUANTITY_DECREASED, QUANTITY_INCREASED} from './actionTypes';
+import {
+    CART_EMPTIED,
+    PRODUCT_ADDED,
+    PRODUCT_REMOVED,
+    QUANTITY_DECREASED,
+    QUANTITY_INCREASED
+} from '../actions/actionTypes';
 
 const initialState = {
     cart: []
@@ -50,6 +55,7 @@ function cartReducer(state = initialState, action) {
     }
 }
 
-export default combineReducers({
-    cart: cartReducer
-});
+export default cartReducer;
+
+
+

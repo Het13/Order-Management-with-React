@@ -20,4 +20,4 @@ app.register_blueprint(address_routes, url_prefix='/')
 app.register_blueprint(user_routes, url_prefix='/')
 
 if __name__ == '__main__':
-    app.run()
+    app.run(debug=True)

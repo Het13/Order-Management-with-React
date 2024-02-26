@@ -2,6 +2,7 @@ from flask import jsonify
 
 from backend.middleware.authorizaton import token_required, roles_required
 from backend.middleware.custom_errors import NotFoundError, DatabaseError
+from backend.middleware.validations import check_product_category
 from backend.product.services import product_services
 
 
@@ -19,7 +20,7 @@ def get_by_id(item_id):
 
 # @token_required
 # @roles_required('admin', 'user')
-# @check_product_category()
+@check_product_category()
 def get_all():
     try:
         products = product_services.get_all()

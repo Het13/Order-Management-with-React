@@ -19,14 +19,15 @@ def admin_register():
 
 def login_user():
     try:
-        token = user_services.login_user()
-        return jsonify({"status": "success", 'message': 'Login successful', 'token': token})
+        token, email = user_services.login_user()
+        print(token, email)
+        return jsonify({"status": "success", "message": 'Login successful', 'email': email, 'token': token}), 200
     except LoginError:
-        return jsonify({"status": "failed", 'message': 'Invalid credentials'})
+        return jsonify({"status": "failed", 'message': 'Invalid credentials'}), 403
     except NotFoundError:
-        return jsonify({"status": "failed", 'message': 'User not found'})
+        return jsonify({"status": "failed", 'message': 'User not found'}), 404
     except DatabaseError:
-        return jsonify({"status": "failed", 'message': 'Login failed'})
+        return jsonify({"status": "failed", 'message': 'Login failed'}), 500
 
 
 @token_required

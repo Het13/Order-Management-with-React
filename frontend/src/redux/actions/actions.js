@@ -1,4 +1,11 @@
-import {CART_EMPTIED, PRODUCT_ADDED, PRODUCT_REMOVED, QUANTITY_DECREASED, QUANTITY_INCREASED} from './actionTypes';
+import {
+    CART_EMPTIED,
+    LOGIN_SUCCESS,
+    PRODUCT_ADDED,
+    PRODUCT_REMOVED,
+    QUANTITY_DECREASED,
+    QUANTITY_INCREASED
+} from './actionTypes';
 
 export const addToCart = (product) => ({
     type: PRODUCT_ADDED,
@@ -28,4 +35,13 @@ export const decreaseQuantity = (productId) => ({
 
 export const emptyCart = () => ({
     type: CART_EMPTIED
+})
+
+export const loginSuccess = (userName, token, isAuth) => ({
+    type: LOGIN_SUCCESS,
+    payload: {
+        name: userName,
+        jwtToken: token,
+        isAuthenticated: isAuth
+    }
 })

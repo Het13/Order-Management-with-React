@@ -1,6 +1,6 @@
 import React from 'react';
 import {connect} from 'react-redux';
-import {decreaseQuantity, emptyCart, increaseQuantity, removeFromCart} from '../redux/actions';
+import {decreaseQuantity, emptyCart, increaseQuantity, removeFromCart} from '../redux/actions/actions';
 import DeleteIcon from '@mui/icons-material/Delete';
 
 const Cart = ({cart, removeFromCart, increaseQuantity, decreaseQuantity, emptyCart}) => {
@@ -36,8 +36,8 @@ const Cart = ({cart, removeFromCart, increaseQuantity, decreaseQuantity, emptyCa
                     <button className="btn btn-outline-secondary btn-sm me-2 ps-2 pe-2 rounded-circle"
                             onClick={() => decreaseQuantity(item.id)}>-
                     </button>
-                    <button className="btn btn-outline-danger btn-sm"
-                            onClick={() => removeFromCart(item.id)}>{DeleteIcon}
+                    <button className="btn btn-outline-danger btn-sm "
+                            onClick={() => removeFromCart(item.id)}><DeleteIcon/>
                     </button>
                 </div>
 

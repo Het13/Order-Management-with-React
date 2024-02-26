@@ -11,12 +11,12 @@ def validate_request_body(required_fields):
         @wraps(f)
         def wrapper(*args, **kwargs):
             if not request.is_json:
-                return jsonify(error={'message': 'Invalid request type'})
+                return jsonify({"status": "failed", "message": 'Invalid request type'})
 
             request_body = request.get_json()
             for field in required_fields:
                 if field not in request_body or request_body[field] == "":
-                    return jsonify(error={'Failed': 'Empty Fields'})
+                    return jsonify({"status": "failed", 'message': 'Empty Fields'})
 
             return f(*args, **kwargs)
 
@@ -35,11 +35,11 @@ def check_product_category():
 
                 category = request.args.get('category')
                 if category not in get_categories():
-                    return jsonify(error={'message': 'No such category found'})
+                    return jsonify({"status": "failed", 'message': 'No such category found'})
                 print('cat verified')
                 return f(*args, **kwargs)
             except:
-                return jsonify(error={'message': 'Some error occurred'})
+                return jsonify({"status": "failed", 'message': 'Some error occurred'})
 
         return wrapper
 
@@ -53,10 +53,10 @@ def check_duplicate_email():
             try:
                 request_body = request.get_json()
                 if request_body['email'] in get_email():
-                    return jsonify(error={'message': 'Duplicate email'})
+                    return jsonify({"status": "failed", 'message': 'Duplicate email'})
                 return f(*args, **kwargs)
             except:
-                return jsonify(error={'message': 'Some error occurred'})
+                return jsonify({"status": "failed", 'message': 'Some error occurred'})
 
         return wrapper
 

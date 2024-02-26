@@ -30,7 +30,7 @@ export const registerSchema = yup
             .required(),
         gender: yup
             .string()
-            .oneOf(['M', 'F']),
+            .oneOf(['M', 'F'], "Must be M or F"),
         phone: yup
             .string()
             .matches(phoneNumberRegex, "Invalid Phone Number")
