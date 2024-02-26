@@ -2,7 +2,7 @@ import React from "react";
 import {Link, Outlet} from "react-router-dom";
 import {connect} from "react-redux";
 
-function Header({user}) {
+function Header({user, cart}) {
     return (<>
         <nav className="navbar navbar-expand-lg bg-body-tertiary">
             <div className="container-fluid">
@@ -21,12 +21,20 @@ function Header({user}) {
                             <Link className="nav-link" to='/products'>Products</Link>
                         </li>
                         <li className="nav-item">
-                            <Link className="nav-link" to='/cart'>My Cart</Link>
+                            {user.isAuthenticated ?
+                                <Link className="nav-link" to='/cart'>My Cart
+                                    <span
+                                        style={{
+                                            backgroundColor: "green", borderRadius: "50%", padding: "0 0.5rem"
+                                        }}>{cart.length}</span></Link> :
+                                <Link className="nav-link" to='/cart'>My Cart</Link>
+                            }
+
                         </li>
                         <li className="nav-item">
                             {user.isAuthenticated ?
-                                <Link className="nav-link disabled" to='/register'>Login/Sign Up</Link> :
-                                <Link className="nav-link " to='/register'>Logged In</Link>}
+                                <Link className="nav-link disabled" to='/register'>Logged In</Link> :
+                                <Link className="nav-link " to='/register'>Login/Sign Up</Link>}
 
                         </li>
                     </ul>
@@ -38,6 +46,7 @@ function Header({user}) {
 }
 
 const mapStateToProps = (state) => ({
+    cart: state.cart.cart,
     user: state.user
 })
 
