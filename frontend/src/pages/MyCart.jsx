@@ -30,10 +30,10 @@ const Cart = ({cart, removeFromCart, increaseQuantity, decreaseQuantity, emptyCa
                 <div className="col-md-2">{item.quantity}</div>
                 <div className="col-md-2">${(item.price * item.quantity).toFixed(2)}</div>
                 <div className="col-md-2">
-                    <button className="btn btn-outline-success btn-sm me-2 ps-2 pe-2 rounded-circle"
+                    <button className="btn btn-outline-success btn-sm me-2 ps-2 pe-2 "
                             onClick={() => increaseQuantity(item.id)}>+
                     </button>
-                    <button className="btn btn-outline-secondary btn-sm me-2 ps-2 pe-2 rounded-circle"
+                    <button className="btn btn-outline-secondary btn-sm me-2 ps-2 pe-2"
                             onClick={() => decreaseQuantity(item.id)}>-
                     </button>
                     <button className="btn btn-outline-danger btn-sm "

@@ -14,13 +14,13 @@ function Product(props) {
                 <h6 className="card-subtitle mb-2 text-body-secondary">{props.price}</h6>
                 <p className="card-text">{props.class}</p>
                 {inCart === false ?
-                    <button className="btn btn-warning me-5" onClick={() => {
+                    <button className="btn btn-success me-5" onClick={() => {
                         setInCart(true)
                         props.onAdd(props.product)
                     }}>Add to Cart
                     </button> :
                     <div className="d-flex align-items-center">
-                        <button className="btn btn-warning me-5" onClick={() => {
+                        <button className="btn btn-danger me-5" onClick={() => {
                             setInCart(false)
                             props.onRemove(props.id)
                         }}>Remove

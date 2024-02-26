@@ -5,6 +5,7 @@ import {yupResolver} from "@hookform/resolvers/yup";
 import {Link, redirect} from "react-router-dom";
 import {City, Country, State} from 'country-state-city';
 import axios from "axios";
+import Input from "../components/Input";
 
 
 const Register = () => {
@@ -67,128 +68,130 @@ const Register = () => {
 
     return (
         <form className="w-50 m-auto my-5 " onSubmit={handleSubmit(onSubmit)}>
-            <h6 style={{color: "red"}}>Message={messageToShow}</h6>
+            <h6 style={{color: "red"}}>{messageToShow}</h6>
             <h1 className="h3 mb-3 fw-normal">Register</h1>
             <div className="row">
                 <div className="col form-floating ">
-                    <input
+                    <Input
+                        title="First Name"
                         type="text"
-                        className="form-control"
-                        id="floatingInput"
+                        id="first-name"
                         placeholder="First Name"
-                        {...register("firstName")}
+                        register={register}
+                        errors={errors.firstName}
+                        name="firstName"
                     />
-                    <p className="pt-2">{errors.firstname?.message}</p>
-                    <label htmlFor="floatingInput">First Name</label>
                 </div>
                 <div className="col form-floating ">
-                    <input
+                    <Input
+                        title="Last Name"
                         type="text"
-                        className="form-control"
-                        id="floatingInput"
+                        id="last-name"
                         placeholder="Last Name"
-                        {...register("lastName")}
+                        register={register}
+                        errors={errors.lastName}
+                        name="lastName"
                     />
-                    <p className="pt-2">{errors.lastname?.message}</p>
-                    <label htmlFor="floatingInput">Last Name</label>
                 </div>
             </div>
             <div className="row">
                 <div className="col-8 form-floating">
-                    <input
+                    <Input
+                        title="Email"
                         type="text"
-                        className="form-control"
-                        id="floatingInput"
-                        placeholder="name@example.com"
-                        {...register("email")}
+                        id="email"
+                        placeholder="Email"
+                        register={register}
+                        errors={errors.email}
+                        name="email"
                     />
-
-                    <label htmlFor="floatingInput">Email address</label>
                 </div>
-                <p className="col-4 m-2">{errors.email?.message}</p>
             </div>
             <div className="row">
                 <div className="col-8 form-floating">
-                    <input
+                    <Input
+                        title="Password"
                         type="password"
-                        className="form-control"
-                        id="floatingPassword"
+                        id="password"
                         placeholder="Password"
-                        {...register("password")}
+                        register={register}
+                        errors={errors.password}
+                        name="password"
                     />
-                    <label htmlFor="floatingPassword">Password</label>
                 </div>
-                <p className="col-4 m-2">{errors.password?.message}</p>
             </div>
             <div className="row">
                 <div className="col-8 form-floating">
-                    <input
+                    <Input
+                        title="Confirm Password"
                         type="password"
-                        className="form-control"
-                        id="floatingPassword"
-                        placeholder="Password"
-                        {...register("confirmPassword")}
+                        id="confirm-password"
+                        placeholder="Confirm Password"
+                        register={register}
+                        errors={errors.confirmPassword}
+                        name="confirmPassword"
                     />
-                    <label htmlFor="floatingPassword">Confirm Password</label>
                 </div>
-                <p className="col-4 m-2">{errors.confirmPassword?.message}</p>
             </div>
             <div className="row">
                 <div className="col form-floating ">
-                    <input
+                    <Input
+                        title="Username"
                         type="text"
-                        className="form-control"
-                        id="floatingInput"
+                        id="username"
                         placeholder="Username"
-                        {...register("username")}
+                        register={register}
+                        errors={errors.username}
+                        name="username"
                     />
-                    <p className="pt-2">{errors.username?.message}</p>
-                    <label htmlFor="floatingInput">Username</label>
                 </div>
                 <div className="col form-floating ">
-                    <input
-                        type="text"
-                        className="form-control"
-                        id="floatingInput"
+                    <Input
+                        title="phone"
+                        type="number"
+                        id="phone"
                         placeholder="Phone"
-                        {...register("phone")}
+                        register={register}
+                        errors={errors.phone}
+                        name="phone"
                     />
-                    <p className="pt-2">{errors.phone?.message}</p>
-                    <label htmlFor="floatingInput">Phone</label>
                 </div>
                 <div className="col form-floating ">
-                    <input
+                    <Input
+                        title="gender"
                         type="text"
-                        className="form-control"
-                        id="floatingInput"
+                        id="gender"
                         placeholder="Gender"
-                        {...register("gender")}
+                        register={register}
+                        errors={errors.gender}
+                        name="gender"
                     />
-                    <label htmlFor="floatingInput">Gender</label>
                 </div>
             </div>
             <div className="row mb-3">
                 <div className="col form-floating">
-                    <input
+                    <Input
+                        title="Address Line 1"
                         type="text"
-                        className="form-control"
-                        id="floatingInput"
-                        placeholder="line 2"
-                        {...register("addressLine1")}
+                        id="address-line-1"
+                        placeholder="Address Line 1"
+                        register={register}
+                        errors={errors.addressLine1}
+                        name="addressLine1"
                     />
-                    <label htmlFor="floatingInput">Address Line 1</label>
                 </div>
             </div>
             <div className="row mb-3">
                 <div className="col form-floating">
-                    <input
+                    <Input
+                        title="Address Line 2"
                         type="text"
-                        className="form-control"
-                        id="floatingInput"
-                        placeholder="line 1"
-                        {...register("addressLine2")}
+                        id="address-line-2"
+                        placeholder="Address Line 2"
+                        register={register}
+                        errors={errors.addressLine2}
+                        name="addressLine2"
                     />
-                    <label htmlFor="floatingInput">Address Line 2</label>
                 </div>
             </div>
             <div className="row mb-2">
@@ -196,12 +199,14 @@ const Register = () => {
                     <select
                         className="form-control"
                         name="country"
+                        defaultChecked="Select"
                         {...register("country")}
                         onChange={(e) => {
                             const index = e.target.selectedIndex
                             setCountry(e.target.options[index].getAttribute('data-key'))
                         }}
                     >
+                        <option className="form-control" data-key={null} value={null}>Select Country</option>
                         {Country.getAllCountries().map((country) => (
                             <option className="form-control" data-key={country.isoCode}
                                     value={country.name}>{country.name}</option>
@@ -219,6 +224,7 @@ const Register = () => {
                             setState(e.target.options[index].getAttribute('data-key'))
                         }}
                     >
+                        <option className="form-control" data-key={null} value={null}>Select State</option>
                         {State.getStatesOfCountry(country).map((state) => (
                             <option className="form-control" data-key={state.isoCode}
                                     value={state.name}>{state.name}</option>
@@ -236,6 +242,7 @@ const Register = () => {
                         {...register("city")}
 
                     >
+                        <option className="form-control" data-key={null} value={null}>Select City</option>
                         {City.getCitiesOfState(country, state).map((city) => (
                             <option className="form-control"
                                     value={city.name}>{city.name}</option>
@@ -244,14 +251,15 @@ const Register = () => {
                     </select>
                 </div>
                 <div className="col form-floating ">
-                    <input
-                        type="text"
-                        className="form-control"
-                        id="floatingInput"
-                        placeholder="Last Name"
-                        {...register("pincode")}
+                    <Input
+                        title="Pincode"
+                        type="number"
+                        id="pincode"
+                        placeholder="Pincode"
+                        register={register}
+                        errors={errors.pincode}
+                        name="pincode"
                     />
-                    <label htmlFor="floatingInput">Pincode</label>
                 </div>
             </div>
             <div className="text-center">

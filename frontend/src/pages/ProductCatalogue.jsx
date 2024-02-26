@@ -53,8 +53,6 @@ function ProductCatalogue({cart, addToCart, removeFromCart}) {
                 <br/>
                 <div className="row gap-4 mx-auto">
                     {products.map((product) => {
-                        // console.log(typeof product.id)
-                        // console.log(cart)
                         return (
                             <Product
                                 id={product.id}

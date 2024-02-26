@@ -5,6 +5,7 @@ const initialState = {
     user: {
         name: null,
         jwtToken: null,
+        customerId: null,
         isAuthenticated: false
     }
 }
@@ -16,6 +17,7 @@ function userReducer(state = initialState, action) {
                 ...state,
                 name: action.payload.name,
                 jwtToken: action.payload.jwtToken,
+                customerId: action.payload.customerId,
                 isAuthenticated: action.payload.isAuthenticated
             }
         default:

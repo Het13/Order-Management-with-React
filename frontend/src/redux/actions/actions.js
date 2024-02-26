@@ -37,11 +37,12 @@ export const emptyCart = () => ({
     type: CART_EMPTIED
 })
 
-export const loginSuccess = (userName, token, isAuth) => ({
+export const loginSuccess = (userName, token, customerId, isAuth) => ({
     type: LOGIN_SUCCESS,
     payload: {
         name: userName,
         jwtToken: token,
+        customerId: customerId,
         isAuthenticated: isAuth
     }
 })

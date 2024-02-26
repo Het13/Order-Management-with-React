@@ -6,12 +6,15 @@ import axios from "axios";
 import {useState} from "react";
 import {loginSuccess} from "../redux/actions/actions";
 import {connect} from "react-redux";
+import Input from "../components/Input";
 
 
 const Login = ({loginSuccess}) => {
     const [messageToShow, setMessageToShow] = useState('')
     const {
-        register, handleSubmit, formState: {errors}
+        register,
+        handleSubmit,
+        formState: {errors}
     } = useForm({
         resolver: yupResolver(loginSchema)
     })
@@ -31,17 +34,14 @@ const Login = ({loginSuccess}) => {
     const onSubmit = async (data) => {
         const response = await login(data)
         if (response.status === 200) {
-            console.log(response.data)
-            loginSuccess(response.data.email, response.data.token, true)
+            console.log(response)
+            loginSuccess(response.data.email, response.data.token, response.data.customer_id, true)
             setMessageToShow(`Logged In Successfully`)
         } else if (response.status === 403) {
-            console.log(response.data)
             setMessageToShow(response.data.message)
         } else if (response.status === 404) {
-            console.log(response.data)
             setMessageToShow(response.data.message)
         } else if (response.status === 500) {
-            console.log(response.data)
             setMessageToShow(response.data.message)
         }
     }
@@ -50,26 +50,26 @@ const Login = ({loginSuccess}) => {
         <h1 className="h3 mb-3 fw-normal">Please sign in</h1>
 
         <div className="form-floating">
-            <input
+            <Input
+                register={register}
+                title="Email Address"
                 type="text"
-                className="form-control"
                 id="floatingInput"
                 placeholder="name@example.com"
-                {...register("email")}
+                name="email"
+                errors={errors.email}
             />
-            <p className="pt-2">{errors.email?.message}</p>
-            <label htmlFor="floatingInput">Email address</label>
         </div>
         <div className="form-floating">
-            <input
+            <Input
+                register={register}
+                title="Password"
                 type="password"
-                className="form-control"
                 id="floatingPassword"
                 placeholder="Password"
-                {...register("password")}
+                name="password"
+                errors={errors.password}
             />
-            <p>{errors.password?.message}</p>
-            <label htmlFor="floatingPassword">Password</label>
         </div>
 
         <div className="text-center">
