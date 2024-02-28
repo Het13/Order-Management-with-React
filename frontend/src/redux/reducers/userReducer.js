@@ -1,12 +1,9 @@
-import {LOGIN_SUCCESS} from "../actions/actionTypes";
+import {LOGIN_SUCCESS, LOGOUT} from "../actions/actionTypes";
 
 
 const initialState = {
     user: {
-        name: null,
-        jwtToken: null,
-        customerId: null,
-        isAuthenticated: false
+        name: null, jwtToken: null, customerId: null, isAuthenticated: false
     }
 }
 
@@ -20,6 +17,8 @@ function userReducer(state = initialState, action) {
                 customerId: action.payload.customerId,
                 isAuthenticated: action.payload.isAuthenticated
             }
+        case LOGOUT:
+            return initialState
         default:
             return state;
     }

@@ -7,10 +7,10 @@ import PersonRoundedIcon from '@mui/icons-material/PersonRounded';
 import LoginRoundedIcon from '@mui/icons-material/LoginRounded';
 import LogoutRoundedIcon from '@mui/icons-material/LogoutRounded';
 import FormatListBulletedRoundedIcon from '@mui/icons-material/FormatListBulletedRounded';
+import {logout} from "../redux/actions/actions";
 
-function Header({user, cart}) {
+function Header({user, cart, logout}) {
     return (<>
-            
             <nav className="navbar navbar-expand-lg bg-secondary">
                 <div className="container-fluid">
                     <Link className="navbar-brand" to="/">Order Management</Link>
@@ -29,27 +29,22 @@ function Header({user, cart}) {
                                       to='/products'><FormatListBulletedRoundedIcon/></Link>
                             </li>
                             <li className="nav-item">
-                                {user.isAuthenticated ?
-                                    <Link className="nav-link " to='/cart'>
-                                        <span><ShoppingCartRoundedIcon/></span>
-                                        <span className="badge bg-success rounded-pill ms-1">{cart.length}</span>
-                                    </Link> :
-                                    <Link className="nav-link " to='/cart'><ShoppingCartRoundedIcon/></Link>
-                                }
+                                {user.isAuthenticated ? <Link className="nav-link " to='/cart'>
+                                    <span><ShoppingCartRoundedIcon/></span>
+                                    <span className="badge bg-success rounded-pill ms-1">{cart.length}</span>
+                                </Link> : <Link className="nav-link " to='/cart'><ShoppingCartRoundedIcon/></Link>}
                             </li>
-                            {user.isAuthenticated
-                                ? <>
-                                    <li className="nav-item">
-                                        <Link className="nav-link  " to='/'><PersonRoundedIcon/></Link>
-                                    </li>
-                                    <li className="nav-item">
-                                        <Link className="nav-link  " to='/'><LogoutRoundedIcon/></Link>
-                                    </li>
-                                </> :
+                            {user.isAuthenticated ? <>
                                 <li className="nav-item">
-                                    <Link className="nav-link  " to='/login'><LoginRoundedIcon/></Link>
+                                    <Link className="nav-link  " to='/'><PersonRoundedIcon/></Link>
                                 </li>
-                            }
+                                <li className="nav-item">
+                                    <Link className="nav-link  " to='/'
+                                          onClick={() => logout()}><LogoutRoundedIcon/></Link>
+                                </li>
+                            </> : <li className="nav-item">
+                                <Link className="nav-link  " to='/login'><LoginRoundedIcon/></Link>
+                            </li>}
 
                         </ul>
                     </div>
@@ -57,14 +52,15 @@ function Header({user, cart}) {
             </nav>
             <Outlet/>
 
-        </>
-    );
+        </>);
 }
 
 const mapStateToProps = (state) => ({
-    cart: state.cart.cart,
-    user:
-    state.user
+    cart: state.cart.cart, user: state.user
 })
 
-export default connect(mapStateToProps)(Header);
+const mapDispathToProps = {
+    logout
+}
+
+export default connect(mapStateToProps, mapDispathToProps)(Header);

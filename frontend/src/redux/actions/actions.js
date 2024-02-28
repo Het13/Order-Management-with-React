@@ -1,6 +1,7 @@
 import {
     CART_EMPTIED,
     LOGIN_SUCCESS,
+    LOGOUT,
     PRODUCT_ADDED,
     PRODUCT_REMOVED,
     QUANTITY_DECREASED,
@@ -45,4 +46,8 @@ export const loginSuccess = (userName, token, customerId, isAuth) => ({
         customerId: customerId,
         isAuthenticated: isAuth
     }
+})
+
+export const logout = () => ({
+    type: LOGOUT
 })
