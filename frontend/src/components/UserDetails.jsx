@@ -13,7 +13,7 @@ const UserDetails = (props) => {
 
     async function getCustomerData() {
         try {
-            const response = await axios(`/api/v1/customers/${customer_id}`, {}, {
+            const response = await axios.get(`/api/v1/customers/${customer_id}`, {
                 headers: {
                     "Authorization": props.user.jwtToken,
                     'Content-Type': 'application/json'

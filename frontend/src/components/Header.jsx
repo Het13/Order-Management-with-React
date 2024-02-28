@@ -10,6 +10,7 @@ import FormatListBulletedRoundedIcon from '@mui/icons-material/FormatListBullete
 
 function Header({user, cart}) {
     return (<>
+            
             <nav className="navbar navbar-expand-lg bg-secondary">
                 <div className="container-fluid">
                     <Link className="navbar-brand" to="/">Order Management</Link>

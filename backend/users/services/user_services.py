@@ -27,7 +27,7 @@ def add(data, role):
 
 def encode_token(user):
     payload = {
-        'exp'  : datetime.datetime.utcnow() + datetime.timedelta(minutes=60),
+        'exp'  : datetime.datetime.utcnow() + datetime.timedelta(minutes=300),
         'email': user
     }
     token = jwt.encode(payload, SECRET_KEY, algorithm='HS256')

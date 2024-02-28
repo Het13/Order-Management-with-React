@@ -17,8 +17,8 @@ def add_customer():
         return jsonify({"status": "failed", 'message': 'Failed to add customer'})
 
 
-# @token_required
-# @roles_required('admin', 'user')
+@token_required
+@roles_required('admin', 'user')
 def get_by_id(id):
     try:
         customer = customer_services.get_by_id(customer_id=id)
