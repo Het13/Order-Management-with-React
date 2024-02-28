@@ -73,10 +73,10 @@ const Login = ({loginSuccess}) => {
         </div>
 
         <div className="text-center">
-            <button className="btn btn-outline-success w-50 py-2 mt-4" type="submit">Sign in</button>
+            <button className="btn btn-outline-success w-50 py-2 mt-4 fw-bold" type="submit">Sign in</button>
         </div>
-        <div className="text-center">
-            <Link to="/register" className="btn btn-outline-dark w-50 py-2 mt-2">No account? Sign up</Link>
+        <div className="text-center ">
+            <Link to="/register" className="btn btn-outline-info w-50 py-2 mt-2">No account? Sign up</Link>
         </div>
         <h6 className="h3 mb-3 fw-normal">{messageToShow}</h6>
     </form>);

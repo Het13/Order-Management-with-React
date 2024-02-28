@@ -2,9 +2,14 @@ import React from 'react';
 import {connect} from 'react-redux';
 import {decreaseQuantity, emptyCart, increaseQuantity, removeFromCart} from '../redux/actions/actions';
 import DeleteIcon from '@mui/icons-material/Delete';
+import {useNavigate} from "react-router-dom";
 
 const Cart = ({cart, removeFromCart, increaseQuantity, decreaseQuantity, emptyCart}) => {
     const totalAmount = cart.reduce((total, item) => total + item.price * item.quantity, 0);
+    const navigate = useNavigate()
+    const onCheckout = () => {
+        navigate('/payment')
+    }
     return (<div className="container">
             <h2>Shopping Cart</h2>
             <div className="row mt-5 mb-3">
@@ -54,9 +59,14 @@ const Cart = ({cart, removeFromCart, increaseQuantity, decreaseQuantity, emptyCa
                 <div className="col-md-2"></div>
             </div>
 
-            <div className="d-grid d-md-flex justify-content-md-end">
+            <div className="d-grid d-md-flex justify-content-md-end me-5">
                 <button className="btn btn-outline-danger me-md-5"
                         onClick={() => emptyCart()}>EMPTY
+                </button>
+            </div>
+            <div className="d-grid d-md-flex justify-content-md-center ">
+                <button className="btn btn-outline-success me-md-5"
+                        onClick={onCheckout}>Proceed to Checkout
                 </button>
             </div>
         </div>

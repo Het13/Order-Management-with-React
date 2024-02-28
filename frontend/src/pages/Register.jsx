@@ -134,7 +134,7 @@ const Register = () => {
                 </div>
             </div>
             <div className="row">
-                <div className="col form-floating ">
+                <div className="col input-group form-floating ">
                     <Input
                         title="Username"
                         type="text"
@@ -263,10 +263,10 @@ const Register = () => {
                 </div>
             </div>
             <div className="text-center">
-                <button className="btn btn-outline-success w-50 py-2 mt-4" type="submit">Sign in</button>
+                <button className="btn btn-outline-success w-50 py-2 mt-4 fw-bold" type="submit">Sign in</button>
             </div>
             <div className="text-center">
-                <Link to="/login" className="btn btn-outline-dark w-50 py-2 mt-4">Already have account? Log In</Link>
+                <Link to="/login" className="btn btn-outline-light w-50 py-2 mt-4">Already have account? Log In</Link>
             </div>
 
         </form>
