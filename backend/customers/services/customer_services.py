@@ -104,23 +104,40 @@ def get_orders(customer_id):
     database_cursor = connection.cursor()
 
     try:
-        get_order_query = "select * from order_header where CUSTOMER_ID=%s"
-
+        get_order_query = "select * from order_header join orders.order_items oi on order_header.ORDER_ID = oi.ORDER_ID join orders.product p on oi.PRODUCT_ID = p.PRODUCT_ID where CUSTOMER_ID=%s;"
         database_cursor.execute(get_order_query, (customer_id,))
-
         order_data = database_cursor.fetchall()
 
-        attributes = ['id', 'customer_id', 'date', 'status', 'payment_mode', 'payment_date', 'shipment_date',
-                      'shipper_id']
+        attributes = ['order_id', 'customer_id', 'date', 'status', 'payment_mode', 'payment_date', 'shipment_date',
+                      'shipper_id', 'order_id', 'product_id', 'product_quantity', 'product_id', 'product_desc']
         orders = []
         for row in order_data:
             row_dict = to_dictionary(attributes=attributes, data=row)
             orders.append(row_dict)
 
+        print(orders)
         if orders == []:
             raise NotFoundError
 
-        return orders
+        orders_dict = {}
+        for item in orders:
+            order_id = item['order_id']
+            if order_id not in orders_dict:
+                orders_dict[order_id] = {
+                    'payment_mode': item['payment_mode'],
+                    'status'      : item['status'],
+                    'products'    : []
+                }
+                if 'payment_date' in item:
+                    orders_dict[order_id]['payment_date'] = item['payment_date']
+            orders_dict[order_id]['products'].append({
+                'id'      : item['product_id'],
+                'name'    : item['product_desc'],
+                'quantity': item['product_quantity']
+            })
+
+        orders_list = [{'order_id': k, **v} for k, v in orders_dict.items()]
+        return orders_list
     except NotFoundError:
         raise NotFoundError
     except:

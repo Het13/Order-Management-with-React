@@ -41,13 +41,16 @@ def get_all():
         return jsonify({"status": "failed", 'message': 'Failed to get customers'})
 
 
-@token_required
-@roles_required('user', 'admin')
+# @token_required
+# @roles_required('user', 'admin')
 def get_orders(id):
     try:
         orders = customer_services.get_orders(customer_id=id)
+        print('orders:', orders)
         return jsonify({"status": "success", 'orders': orders})
     except NotFoundError:
+        print("not")
         return jsonify({"status": "failed", 'message': f'No customer with id: {id} found'})
     except DatabaseError:
+        print("err")
         return jsonify({"status": "failed", 'message': 'Failed to get orders'})

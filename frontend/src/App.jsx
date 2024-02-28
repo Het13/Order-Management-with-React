@@ -7,6 +7,7 @@ import Footer from "./components/Footer";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
 import Payment from "./pages/Payment";
+import Profile from './pages/Profile'
 
 function App() {
     return (
@@ -22,6 +23,7 @@ function App() {
                         <Route path='login' element={<Login/>}/>
                         <Route path='register' element={<Register/>}/>
                         <Route path='payment' element={<Payment/>}/>
+                        <Route path='profile' element={<Profile/>}/>
                     </Routes>
                 </div>
                 <Footer/>

@@ -26,7 +26,7 @@ def login_user():
     except LoginError:
         return jsonify({"status": "failed", 'message': 'Invalid credentials'}), 403
     except NotFoundError:
-        return jsonify({"status": "failed", 'message': 'User not found'}), 404
+        return jsonify({"status": "failed", 'message': 'Profile not found'}), 404
     except DatabaseError:
         return jsonify({"status": "failed", 'message': 'Login failed'}), 500
 
@@ -43,6 +43,6 @@ def change_roles(user_id):
         user_services.change_roles(new_role, user_id)
         return jsonify({"status": "success", 'message': f'Role updated to {new_role} successfully'})
     except NotFoundError:
-        return jsonify({"status": "failed", 'message': 'User not found'})
+        return jsonify({"status": "failed", 'message': 'Profile not found'})
     except DatabaseError:
         return jsonify({"status": "failed", 'message': 'Failed to update role'})

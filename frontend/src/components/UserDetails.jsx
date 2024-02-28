@@ -1,5 +1,6 @@
 import axios from "axios";
 import {useEffect, useState} from "react";
+import Spinner from 'react-bootstrap/Spinner';
 
 const UserDetails = (props) => {
 
@@ -27,9 +28,8 @@ const UserDetails = (props) => {
     }
 
     if (customerData === null) {
-        return <div>
-            Loading...
-        </div>
+        return <Spinner animation="grow" role="status">
+        </Spinner>
     }
     return (
         <div className="col-md-7 col-lg-6 fs-5">
