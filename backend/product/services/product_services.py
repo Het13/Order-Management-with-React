@@ -21,11 +21,12 @@ def get_all():
     try:
         category = request.args.get('category')
         if category:
-            query = "SELECT product.PRODUCT_ID, product.PRODUCT_DESC, PRODUCT.PRODUCT_CLASS_CODE, " \
-                    "product.PRODUCT_PRICE, product.PRODUCT_QUANTITY_AVAIL, product.LEN, " \
-                    "product.WIDTH, product.HEIGHT, product.WEIGHT FROM product JOIN product_class on " \
-                    "product.PRODUCT_CLASS_CODE = product_class.PRODUCT_CLASS_CODE where " \
-                    "product_class.PRODUCT_CLASS_DESC = %s"
+            query = ("SELECT product.PRODUCT_ID, product.PRODUCT_DESC, PRODUCT.PRODUCT_CLASS_CODE, " \
+                     "product_class.product_class_desc," \
+                     "product.PRODUCT_PRICE, product.PRODUCT_QUANTITY_AVAIL, product.LEN, " \
+                     "product.WIDTH, product.HEIGHT, product.WEIGHT FROM product JOIN product_class on " \
+                     "product.PRODUCT_CLASS_CODE = product_class.PRODUCT_CLASS_CODE where " \
+                     "product_class.PRODUCT_CLASS_DESC = %s")
             cursor.execute(query, (category,))
 
         else:
@@ -45,6 +46,7 @@ def get_all():
             row_dict = to_dictionary(attributes=attributes, data=row)
             products_list.append(row_dict)
 
+        print(products_list)
         return products_list
 
     except NotFoundError:

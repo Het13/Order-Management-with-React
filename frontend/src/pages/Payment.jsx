@@ -69,7 +69,10 @@ function Payment({cart, user}) {
             <Modal.Header>
                 <Modal.Title>Order Placed</Modal.Title>
             </Modal.Header>
-            <Modal.Body>Woohoo, your order is placed successfully!</Modal.Body>
+            <Modal.Body>
+                Woohoo, your order is placed successfully!
+                Order details are sent to {user.name}
+            </Modal.Body>
             <Modal.Footer>
                 <Button variant="success" onClick={handleRedirect}>
                     Proceed

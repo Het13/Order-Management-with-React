@@ -20,8 +20,8 @@ function MyOrdersBox({user}) {
                 'Authorization': user.jwtToken, 'Content-type': 'application/json'
             }
         })
-        console.log("order", ordersResponse.data['orders'])
-        setOrders(ordersResponse.data['orders'])
+        let customerOrders = ordersResponse.data['orders'].sort((item1, item2) => item2['order_id'] - item1['order_id'])
+        setOrders(customerOrders)
 
     }
 
