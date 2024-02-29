@@ -29,11 +29,14 @@ function Header({user, cart, logout}) {
                                   to='/products'><FormatListBulletedRoundedIcon/></Link>
                         </li>
                         <li className="nav-item">
-                            {user.isAuthenticated ? <Link className="nav-link " to='/cart'>
-                                <span><ShoppingCartRoundedIcon/></span>
-                                <span className="badge bg-success rounded-pill ms-1">{cart.length}</span>
-                            </Link> : <Link className="nav-link " to='/cart'><ShoppingCartRoundedIcon/></Link>}
+                            {user.isAuthenticated
+                                ? <Link className="nav-link " to='/cart'>
+                                    <span><ShoppingCartRoundedIcon/></span>
+                                    <span className="badge bg-success rounded-pill ms-1">{cart.length}</span>
+                                </Link>
+                                : <Link className="nav-link disabled" to='/'><ShoppingCartRoundedIcon/></Link>}
                         </li>
+
                         {user.isAuthenticated ? <>
                             <li className="nav-item">
                                 <Link className="nav-link  " to='/profile'><PersonRoundedIcon/></Link>

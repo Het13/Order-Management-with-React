@@ -6,7 +6,7 @@ import {addToCart, removeFromCart} from "../redux/actions/actions";
 import Product from "../components/Product";
 
 
-function ProductCatalogue({cart, addToCart, removeFromCart}) {
+function ProductCatalogue({user, cart, addToCart, removeFromCart}) {
 
     const [products, setProducts] = useState([]);
     const [category, setCategory] = useState("All")
@@ -67,6 +67,7 @@ function ProductCatalogue({cart, addToCart, removeFromCart}) {
                                 onAdd={addToCart}
                                 onRemove={removeFromCart}
                                 cart={cart}
+                                user={user}
                             />
                         )
                     })}
@@ -77,7 +78,8 @@ function ProductCatalogue({cart, addToCart, removeFromCart}) {
 }
 
 const mapStateToProps = (state) => ({
-    cart: state.cart.cart
+    cart: state.cart.cart,
+    user: state.user
 })
 
 const mapDispatchToProps = {
