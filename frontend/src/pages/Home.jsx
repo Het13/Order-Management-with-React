@@ -5,10 +5,12 @@ function Home({user}) {
     console.log(user)
     return (
         <>
-            <h1>Home</h1>
-            <h1></h1>
-            <h3>{user.jwtToken}</h3>
-            <h2>{user.name}</h2>
+            <div className="container mt-5">
+                <h1>Home</h1>
+                <h1></h1>
+                <h3>{user.jwtToken}</h3>
+                <h2>{user.name}</h2>
+            </div>
         </>
     )
 }

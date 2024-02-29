@@ -35,7 +35,7 @@ function MyOrdersBox({user}) {
         <div className="col-md-5 col-lg-6 order-md-last">
             <Accordion defaultActiveKey="0">
                 {orders.map((order, index) => (<Accordion.Item key={index} eventKey={index.toString()}
-                                                               className={order.status === 'Cancelled' ? 'bg-danger' : order.status === 'In process' ? 'bg-primary' : 'bg-success'}>
+                >
                     <Accordion.Header>
                         {order.status === 'Cancelled' ? 'Cancelled' : `${order.status} | ${new Date(order.payment_date).toLocaleDateString('en-US', options)}`}
 
@@ -49,6 +49,7 @@ function MyOrdersBox({user}) {
                     </Accordion.Body>
                 </Accordion.Item>))}
             </Accordion>
+            
 
         </div>
     </>)

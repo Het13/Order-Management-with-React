@@ -7,8 +7,9 @@ import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
 import {useNavigate} from "react-router-dom";
 import axios from "axios";
+import {emptyCart} from "../redux/actions/actions";
 
-function Payment({cart, user}) {
+function Payment({cart, user, emptyCart}) {
 
     const [show, setShow] = useState(false)
     const handleShow = () => setShow(true);
@@ -40,6 +41,7 @@ function Payment({cart, user}) {
             headers: header
         })
         console.log(lineItemsResponse.data)
+        emptyCart()
         handleShow()
     }
 
@@ -87,4 +89,8 @@ const mapStateToProps = (state) => ({
     cart: state.cart.cart, user: state.user
 })
 
-export default connect(mapStateToProps)(Payment);
+const mapDispatchToProps = {
+    emptyCart
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(Payment);
