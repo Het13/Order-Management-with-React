@@ -45,36 +45,34 @@ function ProductCatalogue({user, cart, addToCart, removeFromCart}) {
 
 
     return (
-        <div>
-            <div className="container ">
-                <select className={"dropdown"} onChange={(e) => handleCategoryChange(e.target.value)}>
-                    <option value="All">All</option>
-                    {categoryOptions.map((category) => (
-                        <DropdownItem key={category.id} title={category}/>
-                    ))}
-                </select>
-                <br/>
-                <div className="row gap-4 mx-auto">
-                    {products.map((product) => {
-                        return (
-                            <Product
-                                id={product.id}
-                                key={product.id}
-                                name={product.product}
-                                product={product}
-                                class={product.class}
-                                price={product.price}
-                                onAdd={addToCart}
-                                onRemove={removeFromCart}
-                                cart={cart}
-                                user={user}
-                            />
-                        )
-                    })}
-                </div>
+        <div className="container ">
+            <select className={"dropdown"} onChange={(e) => handleCategoryChange(e.target.value)}>
+                <option value="All">All</option>
+                {categoryOptions.map((category) => (
+                    <DropdownItem key={category.id} title={category}/>
+                ))}
+            </select>
+            <br/>
+            <div className="row gap-4 mx-auto">
+                {products.map((product) => {
+                    return (
+                        <Product
+                            id={product.id}
+                            key={product.id}
+                            name={product.product}
+                            product={product}
+                            class={product.class}
+                            price={product.price}
+                            onAdd={addToCart}
+                            onRemove={removeFromCart}
+                            cart={cart}
+                            user={user}
+                        />
+                    )
+                })}
             </div>
         </div>
-    );
+    )
 }
 
 const mapStateToProps = (state) => ({

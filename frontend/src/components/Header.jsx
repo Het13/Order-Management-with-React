@@ -39,18 +39,20 @@ function Header({user, cart, logout}) {
                                 </Link>}
                         </li>
 
-                        {user.isAuthenticated ? <>
-                            <li className="nav-item">
-                                <Link className="nav-link  " to='/profile'><PersonRoundedIcon/></Link>
+                        {user.isAuthenticated
+                            ? <>
+                                <li className="nav-item">
+                                    <Link className="nav-link  " to='/profile'><PersonRoundedIcon/></Link>
+                                </li>
+                                <li className="nav-item">
+                                    <Link className="nav-link  " to='/'
+                                          onClick={() => logout()}><LogoutRoundedIcon/></Link>
+                                </li>
+                            </>
+                            : <li className="nav-item">
+                                <Link className="nav-link  " to='/login'><LoginRoundedIcon/></Link>
                             </li>
-                            <li className="nav-item">
-                                <Link className="nav-link  " to='/'
-                                      onClick={() => logout()}><LogoutRoundedIcon/></Link>
-                            </li>
-                        </> : <li className="nav-item">
-                            <Link className="nav-link  " to='/login'><LoginRoundedIcon/></Link>
-                        </li>}
-
+                        }
                     </ul>
                 </div>
             </div>
