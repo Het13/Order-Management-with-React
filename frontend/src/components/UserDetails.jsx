@@ -29,7 +29,7 @@ const UserDetails = (props) => {
 
     if (customerData === null) {
         return (<div className="col-md-7 col-lg-6 fs-5">
-            <h3 className="mb-3">User Details</h3>
+            <h3 className="mb-3">My Details</h3>
             <SkeletonTheme inline={true}>
                 <SkeletonTheme baseColor="grey" highlightColor="#444" height={30}>
                     <Skeleton count={7}/>
@@ -40,7 +40,7 @@ const UserDetails = (props) => {
 
     }
     return (<div className="col-md-7 col-lg-6 fs-5">
-        <h3 className="mb-3">User Details</h3>
+        <h3 className="mb-3">My Details</h3>
         <div className="row">
             <div className="col-4">
                 Email
