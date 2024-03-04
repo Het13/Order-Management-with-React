@@ -109,7 +109,8 @@ def get_orders(customer_id):
         order_data = database_cursor.fetchall()
 
         attributes = ['order_id', 'customer_id', 'date', 'status', 'payment_mode', 'payment_date', 'shipment_date',
-                      'shipper_id', 'order_id', 'product_id', 'product_quantity', 'product_id', 'product_desc']
+                      'shipper_id', 'order_id', 'product_id', 'product_quantity', 'product_id', 'product_desc',
+                      'oroduct_class_code', 'product_price']
         orders = []
         for row in order_data:
             row_dict = to_dictionary(attributes=attributes, data=row)
@@ -133,7 +134,8 @@ def get_orders(customer_id):
             orders_dict[order_id]['products'].append({
                 'id'      : item['product_id'],
                 'name'    : item['product_desc'],
-                'quantity': item['product_quantity']
+                'quantity': item['product_quantity'],
+                'price'   : item['product_price']
             })
 
         orders_list = [{'order_id': k, **v} for k, v in orders_dict.items()]

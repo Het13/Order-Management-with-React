@@ -2,7 +2,6 @@ import {useEffect, useState} from "react";
 import axios from "axios";
 import Skeleton, {SkeletonTheme} from 'react-loading-skeleton'
 import 'react-loading-skeleton/dist/skeleton.css'
-import {Accordion} from "react-bootstrap";
 
 function MyOrdersBox({user}) {
 
@@ -13,7 +12,6 @@ function MyOrdersBox({user}) {
         getOrders();
     }, []);
 
-    console.log("")
 
     async function getOrders() {
         const ordersResponse = await axios.get(`/api/v1/customers/${customer_id}/orders`, {
@@ -22,8 +20,14 @@ function MyOrdersBox({user}) {
             }
         })
         let customerOrders = ordersResponse.data['orders'].sort((item1, item2) => item2['order_id'] - item1['order_id'])
-        setOrders(customerOrders)
-
+        const ordersWithAmountPaid = customerOrders.map(order => {
+            const amountPaid = order.products.reduce((total, product) => {
+                return total + (product.price * product.quantity);
+            }, 0);
+            return {...order, amount_paid: amountPaid};
+        });
+        setOrders(ordersWithAmountPaid)
+        console.log(orders)
     }
 
     if (orders === null) {
@@ -37,23 +41,54 @@ function MyOrdersBox({user}) {
 
     const options = {day: '2-digit', month: 'short', year: 'numeric'};
 
+
     return (<>
         <div className="col-md-5 col-lg-6 order-md-last">
             <h3 className="mb-3">My Orders</h3>
-            <Accordion>
-                {(orders.map((order, index) => (<Accordion.Item key={index} eventKey={index.toString()}>
-                    <Accordion.Header>
-                        {(order.status === 'Cancelled' ? 'Cancelled' : `${order.status} | ${new Date(order.payment_date).toLocaleDateString('en-US', options)}`)}
-                    </Accordion.Header>
-                    <Accordion.Body>
-                        <ul>
-                            {(order.products.map((product, idx) => (<li key={idx}>
-                                {product.name} - Quantity: {product.quantity}
-                            </li>)))}
-                        </ul>
-                    </Accordion.Body>
-                </Accordion.Item>))) || <Skeleton count={5}/>}
-            </Accordion>
+            <div className="accordion my-order-accordian" id="accordionExample">
+                {orders.map((order, index) => (<div className="accordion-item" key={index}>
+                    <h2 className="accordion-header" id={`heading-${index}`}>
+                        <button
+                            className="accordion-button collapsed"
+                            type="button"
+                            data-bs-toggle="collapse"
+                            data-bs-target={`#collapse-${index}`}
+                            aria-expanded="false"
+                            aria-controls={`collapse-${index}`}
+                        >
+                            <div className="container">
+                                <div className="row"
+                                     style={{
+                                         color: order.status === 'In process' ? 'dodgerblue' : order.status === 'Shipped' ? 'lightgreen' : 'orangered',
+                                     }}>
+                                    <div className="col">{order.status}</div>
+                                    <div className="col">Rs. {order.amount_paid.toFixed(2)}</div>
+                                    <div className="col">
+                                        {order.status === 'Cancelled' || new Date(order.payment_date).toLocaleDateString('en-US', options)}
+                                    </div>
+                                </div>
+                            </div>
+                        </button>
+                    </h2>
+                    <div
+                        id={`collapse-${index}`}
+                        className="accordion-collapse collapse"
+                        aria-labelledby={`heading-${index}`}
+                        data-bs-parent="#accordionExample"
+                    >
+                        <div className="accordion-body">
+                            <div className='row'>
+                                <div className="col-7 fw-bold">Product</div>
+                                <div className="col-3 fw-bold text-center">Quantity</div>
+                            </div>
+                            {order.products.map((product) => (<div className='row'>
+                                <div className="col-7">{product.name}</div>
+                                <div className="col-3 text-center">{product.quantity}</div>
+                            </div>))}
+                        </div>
+                    </div>
+                </div>))}
+            </div>
         </div>
 
     </>)
