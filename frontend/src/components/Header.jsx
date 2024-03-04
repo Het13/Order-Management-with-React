@@ -10,6 +10,8 @@ import FormatListBulletedRoundedIcon from '@mui/icons-material/FormatListBullete
 import {logout} from "../redux/actions/actions";
 
 function Header({user, cart, logout}) {
+    console.log("cart", cart)
+    console.log("cart.cart", cart.cart)
     return (<>
         <nav className="navbar navbar-expand-lg bg-secondary">
             <div className="container-fluid">
@@ -29,12 +31,12 @@ function Header({user, cart, logout}) {
                                   to='/products'><FormatListBulletedRoundedIcon/></Link>
                         </li>
                         <li className="nav-item">
-                            {user.isAuthenticated
-                                ? <Link className="nav-link " to='/cart'>
+                            {cart.length === 0 ?
+                                <Link className="nav-link disabled" to='/'><ShoppingCartRoundedIcon/></Link> :
+                                <Link className="nav-link " to='/cart'>
                                     <span><ShoppingCartRoundedIcon/></span>
                                     <span className="badge bg-success rounded-pill ms-1">{cart.length}</span>
-                                </Link>
-                                : <Link className="nav-link disabled" to='/'><ShoppingCartRoundedIcon/></Link>}
+                                </Link>}
                         </li>
 
                         {user.isAuthenticated ? <>
@@ -62,8 +64,8 @@ const mapStateToProps = (state) => ({
     cart: state.cart.cart, user: state.user
 })
 
-const mapDispathToProps = {
+const mapDispatchToProps = {
     logout
 }
 
-export default connect(mapStateToProps, mapDispathToProps)(Header);
+export default connect(mapStateToProps, mapDispatchToProps)(Header);

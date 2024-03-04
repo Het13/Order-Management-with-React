@@ -3,12 +3,19 @@ import {connect} from 'react-redux';
 import {decreaseQuantity, emptyCart, increaseQuantity, removeFromCart} from '../redux/actions/actions';
 import DeleteIcon from '@mui/icons-material/Delete';
 import {useNavigate} from "react-router-dom";
+import {Flip, toast, ToastContainer} from 'react-toastify';
 
-const Cart = ({cart, removeFromCart, increaseQuantity, decreaseQuantity, emptyCart}) => {
+const Cart = ({user, cart, removeFromCart, increaseQuantity, decreaseQuantity, emptyCart}) => {
     const totalAmount = cart.reduce((total, item) => total + item.price * item.quantity, 0);
     const navigate = useNavigate()
     const onCheckout = () => {
-        navigate('/payment')
+        if (user.isAuthenticated) {
+            navigate('/payment')
+        } else {
+            toast.error("Login First ! ", {
+                position: "bottom-center", theme: "colored", transition: Flip, autoClose: 3000
+            });
+        }
     }
     return (<div className="container">
             <h2>Shopping Cart</h2>
@@ -69,13 +76,14 @@ const Cart = ({cart, removeFromCart, increaseQuantity, decreaseQuantity, emptyCa
                         onClick={onCheckout}>Proceed to Checkout
                 </button>
             </div>
+            <ToastContainer/>
         </div>
 
     );
 };
 
 const mapStateToProps = (state) => ({
-    cart: state.cart.cart,
+    cart: state.cart.cart, user: state.user
 });
 
 const mapDispatchToProps = {

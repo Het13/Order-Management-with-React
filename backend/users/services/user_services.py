@@ -55,7 +55,6 @@ def login_user():
             email = result[0]
             password = result[1]
             customer_id = result[2]
-        print(password)
 
         if check_password_hash(password, auth.password):
             token = encode_token(user)
