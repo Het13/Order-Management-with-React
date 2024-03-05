@@ -1,22 +1,31 @@
-from backend.database_connection import connection_pool
+from backend.address.models.address_models import insert_new_address
 from backend.middleware.custom_errors import DatabaseError
 
 
-def add_address(data):
-	connection = connection_pool.get_connection()
-	database_cursor = connection.cursor()
+def generate_insert_data(address):
+    address_line_1 = address['address_line_1']
+    address_line_2 = address['address_line_2']
+    city = address['city']
+    state = address['state']
+    pincode = address['pincode']
+    country = address['country']
 
-	try:
-		new_address_insert_statement = "INSERT INTO ADDRESS(ADDRESS_LINE1, ADDRESS_LINE2, CITY, STATE, PINCODE, COUNTRY)" \
-		                               " VALUES (%s, %s, %s, %s, %s, %s)"
+    address_data = [{
+        "ADDRESS_LINE1": address_line_1,
+        "ADDRESS_LINE2": address_line_2,
+        "CITY"         : city,
+        "STATE"        : state,
+        "PINCODE"      : pincode,
+        "COUNTRY"      : country
+    }]
 
-		database_cursor.execute(new_address_insert_statement, data)
-		address_id = database_cursor.lastrowid
+    return address_data
 
-		connection.commit()
-		return address_id
-	except:
-		raise DatabaseError
-	finally:
-		database_cursor.close()
-		connection.close()
+
+def add_address(request_body):
+    address_data = generate_insert_data(request_body)
+    try:
+        address_id = insert_new_address(address_data)
+        return address_id
+    except:
+        raise DatabaseError

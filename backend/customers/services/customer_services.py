@@ -149,9 +149,9 @@ def get_orders(customer_id):
         connection.close()
 
 
-def get_address_id(address_data):
+def get_address_id(address):
     try:
-        address_id = address_services.add_address(address_data)
+        address_id = address_services.add_address(address)
         return address_id
     except:
         raise DatabaseError
@@ -167,23 +167,8 @@ def get_attributes(request_body):
     username = request_body['username']
     gender = request_body['gender']
 
-    address_line_1 = address['address_line_1']
-    address_line_2 = address['address_line_2']
-    city = address['city']
-    state = address['state']
-    pincode = address['pincode']
-    country = address['country']
-
-    address_data = (
-        address_line_1,
-        address_line_2,
-        city,
-        state,
-        pincode,
-        country
-    )
     try:
-        address_id = get_address_id(address_data)
+        address_id = get_address_id(address)
         new_customer_data = (
             first_name,
             last_name,
@@ -219,7 +204,7 @@ def add_customer():
         data = {'email': email, 'password': password}
         user_services.add(data, role='user')
 
-        connection.commit()
+        # connection.commit()
         return customer_id
 
     except:
