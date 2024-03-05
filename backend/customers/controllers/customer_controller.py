@@ -1,7 +1,6 @@
 from flask import jsonify
 
 from backend.customers.services import customer_services
-from backend.middleware.authorizaton import token_required, roles_required
 from backend.middleware.custom_errors import NotFoundError, DatabaseError
 from backend.middleware.validations import validate_request_body, check_duplicate_email
 
@@ -17,8 +16,8 @@ def add_customer():
         return jsonify({"status": "failed", 'message': 'Failed to add customer'})
 
 
-@token_required
-@roles_required('admin', 'user')
+# @token_required
+# @roles_required('admin', 'user')
 def get_by_id(id):
     try:
         customer = customer_services.get_by_id(customer_id=id)
@@ -29,8 +28,8 @@ def get_by_id(id):
         return jsonify({"status": "failed", 'message': 'Failed to get customer'})
 
 
-@token_required
-@roles_required('admin')
+# @token_required
+# @roles_required('admin')
 def get_all():
     try:
         customers = customer_services.get_all()
