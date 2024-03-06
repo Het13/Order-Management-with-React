@@ -1,4 +1,5 @@
 from datetime import datetime
+from typing import List, Dict, Any
 
 from flask import request
 from sqlalchemy import select
@@ -11,7 +12,7 @@ from backend.models import OrderHeader, OrderItems, Product, engine
 from backend.users.services import user_services
 
 
-def get_email():
+def get_email() -> List[str]:
     try:
         emails = select_emails()
         return emails
@@ -19,7 +20,7 @@ def get_email():
         raise DatabaseError
 
 
-def to_dictionary(attributes, data):
+def to_dictionary(attributes: List[str], data):
     dictionary = {}
     for i, j in zip(attributes, data):
         if j is None:
@@ -29,7 +30,7 @@ def to_dictionary(attributes, data):
     return dictionary
 
 
-def get_all():
+def get_all() -> List[Dict[str, str | int]]:
     try:
         customers = select_all()
         if customers == []:
@@ -49,7 +50,7 @@ def get_all():
         raise DatabaseError
 
 
-def get_by_id(customer_id):
+def get_by_id(customer_id: str) -> Dict[str, str | int]:
     try:
         customer_data = select_by_id(int(customer_id))
         if customer_data is None:
@@ -75,7 +76,7 @@ def get_by_id(customer_id):
         raise DatabaseError
 
 
-def get_orders(customer_id):
+def get_orders(customer_id: str) -> list[dict[str, Any]]:
     try:
         statement = (
             select(OrderHeader, OrderItems, Product)
@@ -125,7 +126,7 @@ def get_orders(customer_id):
         raise DatabaseError
 
 
-def get_address_id(address):
+def get_address_id(address: List[Dict[str, str]]) -> int:
     try:
         address_id = address_services.add_address(address)
         return address_id
@@ -133,7 +134,7 @@ def get_address_id(address):
         raise DatabaseError
 
 
-def get_attributes(request_body):
+def get_attributes(request_body: Dict[str, Any]) -> list[dict[str, str | int]]:
     first_name = request_body['first_name']
     last_name = request_body['last_name']
     email = request_body['email']
@@ -160,7 +161,7 @@ def get_attributes(request_body):
         raise DatabaseError
 
 
-def add_customer():
+def add_customer() -> int:
     request_body = request.get_json()
     try:
         new_customer_data = get_attributes(request_body)

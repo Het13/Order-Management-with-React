@@ -1,9 +1,11 @@
+from typing import Dict
+
 from backend.cartons.models.carton_model import select_optimal_carton
 from backend.middleware.custom_errors import NotFoundError, DatabaseError, EmptyResult
 from backend.orders.models.order_model import select_order
 
 
-def get_optimal_carton(order_id):
+def get_optimal_carton(order_id: str) -> Dict[str, int]:
     try:
         order = select_order(int(order_id))
 

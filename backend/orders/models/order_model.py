@@ -1,4 +1,4 @@
-from typing import List, Dict
+from typing import List, Dict, Tuple
 
 from sqlalchemy import update, delete, insert, select
 
@@ -6,7 +6,7 @@ from backend.middleware.custom_errors import NotFoundError, DatabaseError
 from backend.models import OrderHeader, engine, OrderItems
 
 
-def insert_order(order_data: List[Dict]) -> int:
+def insert_order(order_data: List[Dict[str, str | int]]) -> int:
     try:
         with engine.connect() as connection:
             result = connection.execute(
@@ -20,7 +20,7 @@ def insert_order(order_data: List[Dict]) -> int:
         raise DatabaseError
 
 
-def insert_items(new_order_items_data: List[Dict]) -> None:
+def insert_items(new_order_items_data: List[Dict[str, str | int]]) -> None:
     try:
         with engine.connect() as connection:
             connection.execute(
@@ -32,7 +32,7 @@ def insert_items(new_order_items_data: List[Dict]) -> None:
         raise DatabaseError
 
 
-def select_order(order_id: int) -> tuple[str] | None:
+def select_order(order_id: int) -> Tuple[str] | None:
     try:
         select_statement = (
             select(OrderHeader)

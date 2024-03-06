@@ -1,4 +1,4 @@
-from typing import List, Dict
+from typing import List, Dict, Tuple
 
 from sqlalchemy import insert, select
 
@@ -6,7 +6,7 @@ from backend.middleware.custom_errors import DatabaseError
 from backend.models import engine, OnlineCustomer
 
 
-def insert_customer(data: List[Dict]) -> int:
+def insert_customer(data: List[Dict[str, str | int | None]]) -> int:
     try:
         with engine.connect() as connection:
             result = connection.execute(
@@ -31,7 +31,7 @@ def select_emails() -> List[str]:
         raise DatabaseError
 
 
-def select_all() -> List[tuple[str]]:
+def select_all() -> List[Tuple[str]]:
     try:
         statement = select(OnlineCustomer)
         customers = []
@@ -43,7 +43,7 @@ def select_all() -> List[tuple[str]]:
         raise DatabaseError
 
 
-def select_by_id(customer_id: int) -> tuple[str]:
+def select_by_id(customer_id: int) -> Tuple[str]:
     try:
         statement = select(OnlineCustomer).where(OnlineCustomer.CUSTOMER_ID == customer_id)
         with engine.connect() as connection:

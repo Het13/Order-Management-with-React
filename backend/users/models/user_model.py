@@ -1,4 +1,4 @@
-from typing import List, Dict, Union
+from typing import List, Dict
 
 from sqlalchemy import insert, select, update
 
@@ -6,7 +6,7 @@ from backend.middleware.custom_errors import NotFoundError, DatabaseError
 from backend.models import engine, Users
 
 
-def insert_user(data: List[Dict]) -> int:
+def insert_user(data: List[Dict[str, str | int]]) -> int:
     try:
         with engine.connect() as connection:
             result = connection.execute(
@@ -19,7 +19,7 @@ def insert_user(data: List[Dict]) -> int:
         raise DatabaseError
 
 
-def select_by_email(email: str) -> Dict[str, Union[str, int]]:
+def select_by_email(email: str) -> Dict[str, str | int]:
     try:
         select_statement = (
             select(Users)
@@ -27,7 +27,6 @@ def select_by_email(email: str) -> Dict[str, Union[str, int]]:
         )
         with engine.connect() as connection:
             result = connection.execute(select_statement).fetchone()
-            print(result)
             if result is None:
                 raise NotFoundError
         return result._mapping

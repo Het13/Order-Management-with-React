@@ -1,3 +1,5 @@
+from typing import List, Dict, Tuple
+
 from flask import request
 
 from backend.middleware.custom_errors import NotFoundError, DatabaseError
@@ -5,7 +7,7 @@ from backend.product.models.product_model import select_categories, select_all_p
     select_by_id
 
 
-def to_dictionary(attributes, data):
+def to_dictionary(attributes: List[str], data: Tuple[str]) -> Dict[str, str | int]:
     dictionary = {}
     for i, j in zip(attributes, data):
         if j is None:
@@ -15,7 +17,7 @@ def to_dictionary(attributes, data):
     return dictionary
 
 
-def get_all():
+def get_all() -> List[Dict[str, str | int]]:
     try:
         category = request.args.get('category')
         if category:
@@ -40,7 +42,7 @@ def get_all():
         raise DatabaseError
 
 
-def get_by_id(product_id):
+def get_by_id(product_id: str) -> Dict[str, str | int]:
     try:
         data = select_by_id(int(product_id))
 
@@ -59,7 +61,7 @@ def get_by_id(product_id):
         raise DatabaseError
 
 
-def get_categories():
+def get_categories() -> List[str]:
     try:
         data = select_categories()
         categories = []

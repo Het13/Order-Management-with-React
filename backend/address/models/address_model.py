@@ -6,7 +6,7 @@ from backend.middleware.custom_errors import DatabaseError
 from backend.models import Address, engine
 
 
-def insert_address(data: List[Dict]) -> int:
+def insert_address(data: List[Dict[str, str]]) -> int:
     try:
         with engine.connect() as connection:
             result = connection.execute(

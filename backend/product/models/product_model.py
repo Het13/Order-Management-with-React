@@ -1,4 +1,4 @@
-from typing import List
+from typing import List, Tuple
 
 from sqlalchemy import select
 
@@ -6,7 +6,7 @@ from backend.middleware.custom_errors import DatabaseError
 from backend.models import engine, ProductClass, Product
 
 
-def select_all_products() -> List[tuple[str]]:
+def select_all_products() -> List[Tuple[str]]:
     try:
         select_statement = (
             select(Product, ProductClass)
@@ -20,7 +20,7 @@ def select_all_products() -> List[tuple[str]]:
         raise DatabaseError
 
 
-def select_by_id(id: int) -> List[tuple[str]]:
+def select_by_id(id: int) -> Tuple[str]:
     try:
         select_statement = (
             select(Product, ProductClass)
@@ -35,7 +35,7 @@ def select_by_id(id: int) -> List[tuple[str]]:
         raise DatabaseError
 
 
-def select_by_category(category: str) -> List[tuple[str]]:
+def select_by_category(category: str) -> List[Tuple[str]]:
     try:
         select_statement = (
             select(Product, ProductClass)
@@ -50,7 +50,7 @@ def select_by_category(category: str) -> List[tuple[str]]:
         raise DatabaseError
 
 
-def select_categories() -> List[tuple[str]]:
+def select_categories() -> List[Tuple[str]]:
     try:
         select_statement = (
             select(ProductClass.PRODUCT_CLASS_DESC)

@@ -1,16 +1,16 @@
 import datetime
+from typing import Dict, List, Tuple
 
 import jwt
-from flask import request, jsonify
-from werkzeug.security import check_password_hash
-from werkzeug.security import generate_password_hash
+from flask import request
+from werkzeug.security import check_password_hash, generate_password_hash
 
 from backend.config import SECRET_KEY
-from backend.middleware.custom_errors import NotFoundError, DatabaseError, LoginError
+from backend.middleware.custom_errors import NotFoundError, DatabaseError, LoginError, MissingAuthentication
 from backend.users.models.user_model import insert_user, select_by_email, update_role, select_role
 
 
-def generate_register_data(data, role, customer_id=None):
+def generate_register_data(data: Dict[str, str], role: str, customer_id=None) -> List[Dict[str, str | int]]:
     hashed_password = generate_password_hash(data['password'], method='pbkdf2:sha256')
 
     register_data = [{
@@ -32,20 +32,19 @@ def add(data, role, customer_id=None):
         raise DatabaseError
 
 
-def encode_token(user):
+def encode_token(user: str) -> str:
     payload = {
         'exp'  : datetime.datetime.utcnow() + datetime.timedelta(minutes=300),
         'email': user
     }
     token = jwt.encode(payload, SECRET_KEY, algorithm='HS256')
-    print(token)
     return token
 
 
-def login_user():
+def login_user() -> Tuple[str, str, int]:
     auth = request.authorization
     if not auth or not auth.username or not auth.password:
-        return jsonify({"status": "failed", 'message': 'Could not verify'})
+        raise MissingAuthentication
 
     email = auth.username
 
@@ -56,11 +55,12 @@ def login_user():
         password = user['password']
 
         if check_password_hash(password, auth.password):
-            print('valid')
             token = encode_token(email)
             return token, email, customer_id
         raise LoginError
 
+    except MissingAuthentication:
+        raise MissingAuthentication
     except LoginError:
         raise LoginError
     except NotFoundError:
@@ -69,7 +69,7 @@ def login_user():
         raise DatabaseError
 
 
-def change_roles(new_role, user_id):
+def change_roles(new_role: str, user_id: str) -> None:
     try:
         update_role(int(user_id), new_role)
     except NotFoundError:
@@ -78,7 +78,7 @@ def change_roles(new_role, user_id):
         raise DatabaseError
 
 
-def get_role(email):
+def get_role(email: str) -> str:
     try:
         role = select_role(email)
         return role
