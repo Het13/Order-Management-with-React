@@ -34,7 +34,7 @@ def add_items(order_id):
 @roles_required('admin')
 def update_status(order_id):
     try:
-        order_services.update_status(order_id)
+        order_services.update_order_status(order_id)
         return jsonify({"status": "success", 'message': 'successfully modified order status'}), 200
     except NotFoundError:
         return jsonify({"status": "failed", 'message': f'Order not found'}), 404
@@ -46,7 +46,7 @@ def update_status(order_id):
 @roles_required('admin')
 def update_shipper_id(order_id):
     try:
-        order_services.update_shipper_id(order_id)
+        order_services.update_shipper(order_id)
         return jsonify({"status": "success", 'message': 'Successfully modified shipper_id'}), 200
     except NotFoundError:
         return jsonify({"status": "failed", 'message': 'Order not found'}), 404

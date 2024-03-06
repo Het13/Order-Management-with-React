@@ -1,7 +1,7 @@
 import os
 
 from dotenv import load_dotenv
-from sqlalchemy import create_engine, select
+from sqlalchemy import create_engine
 from sqlalchemy.ext.automap import automap_base
 from sqlalchemy.orm import Session
 
@@ -27,24 +27,3 @@ Product = Base.classes.product
 ProductClass = Base.classes.product_class
 Shipper = Base.classes.shipper
 Users = Base.classes.users
-
-
-def to_dictionary(attributes, data):
-    dictionary = {}
-    for i, j in zip(attributes, data):
-        if j is None:
-            continue
-        dictionary[i] = j
-
-    return dictionary
-
-
-statement = (select(OrderHeader, OrderItems, Product)
-             .join_from(OrderHeader, OrderItems)
-             .join_from(OrderItems, Product)
-             .where(OrderHeader.CUSTOMER_ID == 1))
-
-order_data = []
-with engine.connect() as connection:
-    for row in connection.execute(statement):
-        order_data.append(row)

@@ -1,13 +1,13 @@
 from datetime import datetime
 
 from flask import request
+from sqlalchemy import select
 
 from backend.address.models import address_model
 from backend.address.services import address_services
-from backend.customers.models.customer_model import insert_customer, select_emails, select_all, \
-    select_by_id
+from backend.customers.models.customer_model import insert_customer, select_emails, select_all, select_by_id
 from backend.middleware.custom_errors import NotFoundError, DatabaseError
-from backend.orders.model import order_model
+from backend.models import OrderHeader, OrderItems, Product, engine
 from backend.users.services import user_services
 
 
@@ -51,7 +51,7 @@ def get_all():
 
 def get_by_id(customer_id):
     try:
-        customer_data = select_by_id(customer_id)
+        customer_data = select_by_id(int(customer_id))
         if customer_data is None:
             raise NotFoundError
 
@@ -60,7 +60,7 @@ def get_by_id(customer_id):
         customer = to_dictionary(customer_attributes, data=customer_data)
 
         address_id = customer['address_id']
-        address_data = address_model.select_by_id(address_id)
+        address_data = address_model.select_by_id(int(address_id))
         if address_data is None:
             raise NotFoundError
 
@@ -77,7 +77,16 @@ def get_by_id(customer_id):
 
 def get_orders(customer_id):
     try:
-        order_data = order_model.get_by_customer_id(customer_id)
+        statement = (
+            select(OrderHeader, OrderItems, Product)
+            .join_from(OrderHeader, OrderItems)
+            .join_from(OrderItems, Product)
+            .where(OrderHeader.CUSTOMER_ID == int(customer_id))
+        )
+        order_data = []
+        with engine.connect() as connection:
+            for row in connection.execute(statement):
+                order_data.append(row)
 
         attributes = ['order_id', 'customer_id', 'date', 'status', 'payment_mode', 'payment_date', 'shipment_date',
                       'shipper_id', 'order_id', 'product_id', 'product_quantity', 'product_id', 'product_desc',
@@ -161,10 +170,8 @@ def add_customer():
         email = request_body['email']
         password = request_body['password']
 
-        data = {'email': email, 'password': password}
-        user_services.add(data, role='user')
-
-        # connection.commit()
+        user_data = {'email': email, 'password': password}
+        user_services.add(user_data, role='user')
         return customer_id
 
     except:
