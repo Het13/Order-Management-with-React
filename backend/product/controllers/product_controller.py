@@ -1,16 +1,16 @@
 from flask import jsonify
 
-from backend.middleware.authorizaton import token_required, roles_required
 from backend.middleware.custom_errors import NotFoundError, DatabaseError
 from backend.middleware.validations import check_product_category
 from backend.product.services import product_services
 
 
-@token_required
-@roles_required('admin', 'user')
+# @token_required
+# @roles_required('admin', 'user')
 def get_by_id(item_id):
     try:
         product_details = product_services.get_by_id(item_id)
+        print(product_details)
         return jsonify({'status': 'success', 'product': product_details}), 200
     except NotFoundError:
         return jsonify({'status': 'failed', 'message': 'Product not found'}), 200
@@ -24,7 +24,6 @@ def get_by_id(item_id):
 def get_all():
     try:
         products = product_services.get_all()
-        print(products)
         return jsonify({'status': 'success', 'products': products}), 200
     except NotFoundError:
         return jsonify({'status': 'failed', 'message': 'No products found'})
@@ -32,8 +31,8 @@ def get_all():
         return jsonify({'status': 'failed', 'message': 'Failed to get products'})
 
 
-@token_required
-@roles_required('admin', 'user')
+# @token_required
+# @roles_required('admin', 'user')
 def get_by_category():
     try:
         products = product_services.get_by_category()
