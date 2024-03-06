@@ -1,6 +1,6 @@
 from typing import List, Dict
 
-from sqlalchemy import update, delete, insert
+from sqlalchemy import update, delete, insert, select
 
 from backend.middleware.custom_errors import NotFoundError, DatabaseError
 from backend.models import OrderHeader, engine, OrderItems
@@ -28,6 +28,19 @@ def insert_items(new_order_items_data: List[Dict]) -> None:
                 new_order_items_data,
             )
             connection.commit()
+    except:
+        raise DatabaseError
+
+
+def select_order(order_id: int) -> tuple[str] | None:
+    try:
+        select_statement = (
+            select(OrderHeader)
+            .where(OrderHeader.ORDER_ID == order_id)
+        )
+        with engine.connect() as connection:
+            result = connection.execute(select_statement).fetchone()
+        return result
     except:
         raise DatabaseError
 

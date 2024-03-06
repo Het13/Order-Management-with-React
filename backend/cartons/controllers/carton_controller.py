@@ -1,12 +1,11 @@
 from flask import jsonify
 
 from backend.cartons.services.cartonServices import get_optimal_carton
-from backend.middleware.authorizaton import token_required, roles_required
 from backend.middleware.custom_errors import NotFoundError, DatabaseError, EmptyResult
 
 
-@token_required
-@roles_required('admin')
+# @token_required
+# @roles_required('admin')
 def optimal_carton(order_id):
     try:
         carton = get_optimal_carton(order_id)
