@@ -1,10 +1,13 @@
+from typing import List, Dict, Tuple
+
 from flask import request
 
-from backend.database_connection import connection_pool
 from backend.middleware.custom_errors import NotFoundError, DatabaseError
+from backend.product.models.product_model import select_categories, select_all_products, select_by_category, \
+    select_by_id
 
 
-def to_dictionary(attributes, data):
+def to_dictionary(attributes: List[str], data: Tuple[str]) -> Dict[str, str | int]:
     dictionary = {}
     for i, j in zip(attributes, data):
         if j is None:
@@ -14,67 +17,40 @@ def to_dictionary(attributes, data):
     return dictionary
 
 
-def get_all():
-    connection = connection_pool.get_connection()
-    cursor = connection.cursor()
-
+def get_all() -> List[Dict[str, str | int]]:
     try:
         category = request.args.get('category')
         if category:
-            query = ("SELECT product.PRODUCT_ID, product.PRODUCT_DESC, PRODUCT.PRODUCT_CLASS_CODE, " \
-                     "product_class.product_class_desc," \
-                     "product.PRODUCT_PRICE, product.PRODUCT_QUANTITY_AVAIL, product.LEN, " \
-                     "product.WIDTH, product.HEIGHT, product.WEIGHT FROM product JOIN product_class on " \
-                     "product.PRODUCT_CLASS_CODE = product_class.PRODUCT_CLASS_CODE where " \
-                     "product_class.PRODUCT_CLASS_DESC = %s")
-            cursor.execute(query, (category,))
-
+            data = select_by_category(category)
         else:
-            query = 'SELECT PRODUCT_ID, PRODUCT_DESC, PRODUCT.PRODUCT_CLASS_CODE, PRODUCT_CLASS_DESC, PRODUCT_PRICE, ' \
-                    'PRODUCT_QUANTITY_AVAIL, LEN, WIDTH, HEIGHT, WEIGHT FROM PRODUCT INNER JOIN PRODUCT_CLASS ON ' \
-                    'PRODUCT_CLASS.PRODUCT_CLASS_CODE = PRODUCT.PRODUCT_CLASS_CODE;'
-
-            cursor.execute(query)
-        data = cursor.fetchall()
+            data = select_all_products()
         if data is None:
             raise NotFoundError
 
-        attributes = ['id', 'product', 'class_code', 'class', 'price', 'available_quantity', 'length', 'width',
-                      'height', 'weight']
+        attributes = ['id', 'product', 'class_code', 'price', 'available_quantity', 'length', 'width',
+                      'height', 'weight', 'class_code', 'class']
         products_list = []
         for row in data:
             row_dict = to_dictionary(attributes=attributes, data=row)
             products_list.append(row_dict)
 
-        print(products_list)
         return products_list
 
     except NotFoundError:
         raise NotFoundError
     except:
         raise DatabaseError
-    finally:
-        cursor.close()
-        connection.close()
 
 
-def get_by_id(product_id):
-    connection = connection_pool.get_connection()
-    cursor = connection.cursor()
-
+def get_by_id(product_id: str) -> Dict[str, str | int]:
     try:
-        query = 'SELECT PRODUCT_ID, PRODUCT_DESC, PRODUCT.PRODUCT_CLASS_CODE, PRODUCT_CLASS_DESC, PRODUCT_PRICE, ' \
-                'PRODUCT_QUANTITY_AVAIL, LEN, WIDTH, HEIGHT, WEIGHT FROM PRODUCT INNER JOIN PRODUCT_CLASS ON ' \
-                'PRODUCT_CLASS.PRODUCT_CLASS_CODE = PRODUCT.PRODUCT_CLASS_CODE WHERE PRODUCT_ID = %s'
-
-        cursor.execute(query, (product_id,))
-        data = cursor.fetchone()
+        data = select_by_id(int(product_id))
 
         if data is None:
             raise NotFoundError
 
-        attributes = ['id', 'product', 'class_code', 'class', 'price', 'available_quantity', 'length', 'width',
-                      'height', 'weight']
+        attributes = ['id', 'product', 'class_code', 'price', 'available_quantity', 'length', 'width',
+                      'height', 'weight', 'class_code', 'class']
 
         product = to_dictionary(attributes=attributes, data=data)
         return product
@@ -83,28 +59,17 @@ def get_by_id(product_id):
         raise NotFoundError
     except:
         raise DatabaseError
-    finally:
-        cursor.close()
-        connection.close()
 
 
-def get_categories():
-    connection = connection_pool.get_connection()
-    cursor = connection.cursor()
+def get_categories() -> List[str]:
     try:
-        query = 'SELECT DISTINCT PRODUCT_CLASS_DESC FROM PRODUCT_CLASS'
-        cursor.execute(query)
-        data = cursor.fetchall()
-
+        data = select_categories()
         categories = []
         for row in data:
             categories.append(row[0])
         return categories
     except:
         raise DatabaseError
-    finally:
-        cursor.close()
-        connection.close()
 
 
 def get_by_category():

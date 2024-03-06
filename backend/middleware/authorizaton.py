@@ -1,7 +1,8 @@
 from functools import wraps
+from typing import Callable, Any, Tuple
 
 import jwt
-from flask import request, jsonify
+from flask import request, jsonify, Response
 
 from backend.config import SECRET_KEY
 from backend.middleware.custom_errors import DatabaseError
@@ -9,9 +10,9 @@ from backend.users.services.user_services import get_role
 
 
 # decorator for validating JWT Token
-def token_required(f):
+def token_required(f: Callable[..., Any]) -> Callable[..., Tuple[Response, int]]:
     @wraps(f)
-    def decorator(*args, **kwargs):
+    def decorator(*args: Any, **kwargs: Any) -> Tuple[Response, int]:
         token = None
         if 'Authorization' in request.headers:
             token = request.headers.get('Authorization')
@@ -32,10 +33,10 @@ def token_required(f):
 
 
 # decorator for Role Based Authorization
-def roles_required(*roles):
-    def wrapper(f):
+def roles_required(*roles: str) -> Callable[[Callable[..., Tuple[Response, int]]], Callable[..., Tuple[Response, int]]]:
+    def wrapper(f: Callable[..., Tuple[Response, int]]) -> Callable[..., Tuple[Response, int]]:
         @wraps(f)
-        def decorator(*args, **kwargs):
+        def decorator(*args: Any, **kwargs: Any) -> Tuple[Response, int]:
             token = request.headers.get('Authorization')
             data = jwt.decode(token, SECRET_KEY, algorithms=['HS256'])
             email = data['email']
@@ -44,7 +45,7 @@ def roles_required(*roles):
                 if role not in roles:
                     return jsonify(failed={'message': 'You are not authorized'}), 403
             except DatabaseError:
-                return jsonify(failed={'message': 'Authorization Failed'})
+                return jsonify(failed={'message': 'Authorization Failed'}), 500
 
             return f(*args, **kwargs)
 

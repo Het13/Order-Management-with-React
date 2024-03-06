@@ -1,42 +1,28 @@
-from backend.database_connection import connection_pool
+from typing import Dict
+
+from backend.cartons.models.carton_model import select_optimal_carton
 from backend.middleware.custom_errors import NotFoundError, DatabaseError, EmptyResult
+from backend.orders.models.order_model import select_order
 
 
-def get_optimal_carton(order_id):
-	connection = connection_pool.get_connection()
-	database_cursor = connection.cursor()
+def get_optimal_carton(order_id: str) -> Dict[str, int]:
+    try:
+        order = select_order(int(order_id))
 
-	try:
-		check_query = "SELECT * FROM ORDER_HEADER WHERE ORDER_ID = %s"
-		database_cursor.execute(check_query, (order_id,))
+        if order is None:
+            raise NotFoundError
 
-		if database_cursor.fetchall() is None:
-			raise NotFoundError
+        carton = select_optimal_carton(int(order_id))
 
-		carton_query = "SELECT CARTON.CARTON_ID, (CARTON.LEN * CARTON.WIDTH * CARTON.HEIGHT) AS CARTON_VOL FROM CARTON WHERE " \
-		               "(CARTON.LEN * CARTON.WIDTH * CARTON.HEIGHT) >= (SELECT SUM(PRODUCT.LEN * PRODUCT.HEIGHT * PRODUCT.WIDTH * " \
-		               "ORDER_ITEMS.PRODUCT_QUANTITY) AS PRODUCT_VOL FROM ORDER_ITEMS INNER JOIN PRODUCT ON PRODUCT.PRODUCT_ID = " \
-		               "ORDER_ITEMS.PRODUCT_ID WHERE ORDER_ITEMS.ORDER_ID = %s) ORDER BY CARTON_VOL LIMIT 1;"
+        carton = {
+            'id'    : carton['CARTON_ID'],
+            'volume': carton['CARTON_VOLUME']
+        }
+        return carton
 
-		carton_params = (order_id,)
-
-		database_cursor.execute(carton_query, carton_params)
-
-		query_result = database_cursor.fetchone()
-
-		if query_result is None:
-			raise EmptyResult
-
-		carton = {
-			'id'    : query_result[0],
-			'volume': query_result[1]
-		}
-
-		return carton
-	except NotFoundError:
-		raise NotFoundError
-	except:
-		raise DatabaseError
-	finally:
-		database_cursor.close()
-		connection.close()
+    except EmptyResult:
+        raise EmptyResult
+    except NotFoundError:
+        raise NotFoundError
+    except:
+        raise DatabaseError

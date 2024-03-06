@@ -1,18 +1,22 @@
 class NotFoundError(Exception):
-	pass
+    pass
 
 
 class DatabaseError(Exception):
-	pass
+    pass
 
 
 class LoginError(Exception):
-	pass
+    pass
 
 
 class EmptyResult(Exception):
-	pass
+    pass
 
 
 class InvalidFilter(Exception):
-	pass
+    pass
+
+
+class MissingAuthentication(Exception):
+    pass
