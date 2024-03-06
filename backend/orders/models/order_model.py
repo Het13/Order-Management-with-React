@@ -77,12 +77,13 @@ def delete_order(order_id: int) -> None:
             .values({
                 OrderHeader.ORDER_STATUS: 'Cancelled',
                 OrderHeader.PAYMENT_MODE: None,
-                OrderHeader.PAYMENT_DATE: None
+                OrderHeader.PAYMENT_DATE: None,
+                OrderHeader.SHIPPER_ID  : None
             })
         )
         delete_statement = (
             delete(OrderItems)
-            .where(OrderItems.ORDER_ID == order_id)
+            .where(OrderItems.ORDER_ID == 10076)
         )
 
         with engine.connect() as connection:

@@ -54,7 +54,8 @@ def add_items(order_id):
     try:
         new_order_items_data = get_items_attributes(order_id)
         insert_items(new_order_items_data)
-    except:
+    except Exception as e:
+        print(e)
         raise DatabaseError
 
 

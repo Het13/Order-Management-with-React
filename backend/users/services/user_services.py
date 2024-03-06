@@ -6,23 +6,30 @@ from werkzeug.security import check_password_hash
 from werkzeug.security import generate_password_hash
 
 from backend.config import SECRET_KEY
-from backend.database_connection import connection_pool
 from backend.middleware.custom_errors import NotFoundError, DatabaseError, LoginError
+from backend.users.models.user_model import insert_user, select_by_email, update_role, select_role
 
 
-def add(data, role):
+def generate_register_data(data, role, customer_id=None):
     hashed_password = generate_password_hash(data['password'], method='pbkdf2:sha256')
-    connection = connection_pool.get_connection()
-    database_cursor = connection.cursor()
+
+    register_data = [{
+        'email'      : data['email'],
+        'password'   : hashed_password,
+        'role'       : role,
+        'customer_id': customer_id
+    }]
+
+    return register_data
+
+
+def add(data, role, customer_id=None):
+    register_data = generate_register_data(data, role, customer_id)
+
     try:
-        query = 'INSERT INTO USERS(EMAIL,PASSWORD,ROLE) VALUES(%s,%s,%s)'
-        database_cursor.execute(query, (data['email'], hashed_password, role))
-        connection.commit()
+        user_id = insert_user(register_data)
     except:
         raise DatabaseError
-    finally:
-        database_cursor.close()
-        connection.close()
 
 
 def encode_token(user):
@@ -38,26 +45,19 @@ def encode_token(user):
 def login_user():
     auth = request.authorization
     if not auth or not auth.username or not auth.password:
-        return jsonify({'message': 'Could not verify'})
+        return jsonify({"status": "failed", 'message': 'Could not verify'})
 
-    user = auth.username
-
-    connection = connection_pool.get_connection()
-    database_cursor = connection.cursor()
+    email = auth.username
 
     try:
-        query = 'SELECT EMAIL,PASSWORD,CUSTOMER_ID FROM USERS WHERE EMAIL = %s'
-        database_cursor.execute(query, (user,))
-        result = database_cursor.fetchone()
-        if result is None:
-            raise NotFoundError
-        else:
-            email = result[0]
-            password = result[1]
-            customer_id = result[2]
+        user = select_by_email(email)
+        email = user['email']
+        customer_id = user['customer_id']
+        password = user['password']
 
         if check_password_hash(password, auth.password):
-            token = encode_token(user)
+            print('valid')
+            token = encode_token(email)
             return token, email, customer_id
         raise LoginError
 
@@ -67,42 +67,22 @@ def login_user():
         raise NotFoundError
     except:
         raise DatabaseError
-    finally:
-        database_cursor.close()
-        connection.close()
 
 
 def change_roles(new_role, user_id):
-    connection = connection_pool.get_connection()
-    database_cursor = connection.cursor()
-
     try:
-        query = 'UPDATE USERS SET ROLE=%s WHERE ID=%s'
-        database_cursor.execute(query, (new_role, user_id))
-        if database_cursor.rowcount == 0:
-            raise NotFoundError
-        connection.commit()
+        update_role(int(user_id), new_role)
     except NotFoundError:
         raise NotFoundError
     except:
         raise DatabaseError
-    finally:
-        database_cursor.close()
-        connection.close()
 
 
 def get_role(email):
-    connection = connection_pool.get_connection()
-    database_cursor = connection.cursor()
-
     try:
-        query = 'SELECT ROLE FROM USERS WHERE EMAIL=%s'
-
-        database_cursor.execute(query, (email,))
-
-        return database_cursor.fetchone()[0]
+        role = select_role(email)
+        return role
+    except NotFoundError:
+        raise NotFoundError
     except:
         raise DatabaseError
-    finally:
-        database_cursor.close()
-        connection.close()

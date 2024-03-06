@@ -171,7 +171,7 @@ def add_customer():
         password = request_body['password']
 
         user_data = {'email': email, 'password': password}
-        user_services.add(user_data, role='user')
+        user_services.add(data=user_data, role='user', customer_id=customer_id)
         return customer_id
 
     except:

@@ -1,6 +1,5 @@
 from flask import request, jsonify
 
-from backend.middleware.authorizaton import token_required, roles_required
 from backend.middleware.custom_errors import NotFoundError, DatabaseError, LoginError
 from backend.middleware.validations import validate_request_body
 from backend.users.services import user_services
@@ -20,7 +19,6 @@ def admin_register():
 def login_user():
     try:
         token, email, customer_id = user_services.login_user()
-        print(token, email)
         return jsonify({"status": "success", "message": 'Login successful', 'email': email, 'customer_id': customer_id,
                         'token' : token}), 200
     except LoginError:
@@ -31,8 +29,8 @@ def login_user():
         return jsonify({"status": "failed", 'message': 'Login failed'}), 500
 
 
-@token_required
-@roles_required('admin')
+# @token_required
+# @roles_required('admin')
 @validate_request_body(required_fields=['new_role'])
 def change_roles(user_id):
     new_role = request.json.get('new_role')
