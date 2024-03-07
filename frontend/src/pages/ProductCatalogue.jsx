@@ -52,16 +52,17 @@ function ProductCatalogue({user, cart, addToCart, removeFromCart}) {
     }
 
     return (<div className="container ">
-        <select className={"dropdown"} onChange={(e) => handleCategoryChange(e.target.value)}>
+        <select className={"dropdown custom-select p-1 fw-bold mt-3"}
+                onChange={(e) => handleCategoryChange(e.target.value)}>
             <option value="All">All</option>
             {categoryOptions.map((category) => (<DropdownItem key={category.id} title={category}/>))}
         </select>
         <br/>
         {!loadingProducts ? <div className="row gap-4 mx-auto">
-            {products.map((product) => {
+            {products.map((product, index) => {
                 return (<Product
                     id={product.id}
-                    key={product.id}
+                    key={index}
                     name={product.product}
                     product={product}
                     class={product.class}

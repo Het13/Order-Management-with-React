@@ -2,6 +2,7 @@ import {useEffect, useState} from "react";
 import axios from "axios";
 import Skeleton, {SkeletonTheme} from 'react-loading-skeleton'
 import 'react-loading-skeleton/dist/skeleton.css'
+import {Link} from 'react-router-dom'
 
 function MyOrdersBox({user}) {
 
@@ -14,20 +15,24 @@ function MyOrdersBox({user}) {
 
 
     async function getOrders() {
-        const ordersResponse = await axios.get(`/api/v1/customers/${customer_id}/orders`, {
-            headers: {
-                'Authorization': user.jwtToken, 'Content-type': 'application/json'
-            }
-        })
-        let customerOrders = ordersResponse.data['orders'].sort((item1, item2) => item2['order_id'] - item1['order_id'])
-        const ordersWithAmountPaid = customerOrders.map(order => {
-            const amountPaid = order.products.reduce((total, product) => {
-                return total + (product.price * product.quantity);
-            }, 0);
-            return {...order, amount_paid: amountPaid};
-        });
-        setOrders(ordersWithAmountPaid)
-        console.log(orders)
+        try {
+            const ordersResponse = await axios.get(`/api/v1/customers/${customer_id}/orders`, {
+                headers: {
+                    'Authorization': user.jwtToken, 'Content-type': 'application/json'
+                }
+            })
+            let customerOrders = ordersResponse.data['orders'].sort((item1, item2) => item2['order_id'] - item1['order_id'])
+            const ordersWithAmountPaid = customerOrders.map(order => {
+                const amountPaid = order.products.reduce((total, product) => {
+                    return total + (product.price * product.quantity);
+                }, 0);
+                return {...order, amount_paid: amountPaid};
+            });
+            setOrders(ordersWithAmountPaid)
+            console.log(ordersWithAmountPaid)
+        } catch {
+            setOrders({})
+        }
     }
 
     if (orders === null) {
@@ -36,6 +41,11 @@ function MyOrdersBox({user}) {
             <SkeletonTheme baseColor="grey" highlightColor="#444" height={60}>
                 <Skeleton count={7}/>
             </SkeletonTheme>
+        </div>)
+    } else if (Object.keys(orders).length === 0) {
+        return (<div className="col-md-5 col-lg-6 order-md-last">
+            <h1>No orders</h1>
+            <Link to='/products' className="btn btn-outline-info">Continue Shopping</Link>
         </div>)
     }
 

@@ -50,6 +50,6 @@ def get_orders(id: str) -> Tuple[Response, int]:
         orders = customer_services.get_orders(customer_id=id)
         return jsonify({"status": "success", 'orders': orders}), 200
     except NotFoundError:
-        return jsonify({"status": "failed", 'message': 'Customer not found'}), 404
+        return jsonify({"status": "failed", 'message': 'No orders'}), 404
     except DatabaseError:
         return jsonify({"status": "failed", 'message': 'Failed to get orders'}), 404

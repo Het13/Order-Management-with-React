@@ -3,7 +3,7 @@ import {connect} from 'react-redux';
 import {decreaseQuantity, emptyCart, increaseQuantity, removeFromCart} from '../redux/actions/actions';
 import DeleteIcon from '@mui/icons-material/Delete';
 import {useNavigate} from "react-router-dom";
-import {Flip, toast, ToastContainer} from 'react-toastify';
+import {Flip, toast} from 'react-toastify';
 
 const Cart = ({user, cart, removeFromCart, increaseQuantity, decreaseQuantity, emptyCart}) => {
     const totalAmount = cart.reduce((total, item) => total + item.price * item.quantity, 0);
@@ -12,10 +12,34 @@ const Cart = ({user, cart, removeFromCart, increaseQuantity, decreaseQuantity, e
         if (user.isAuthenticated) {
             navigate('/payment')
         } else {
-            toast.error("Login First ! ", {
+            toast.warning("Login First ! ", {
                 position: "bottom-center", theme: "colored", transition: Flip, autoClose: 3000
             });
         }
+    }
+
+    const handleEmptyCart = () => {
+        toast.success("Cart Emptied!", {
+            position: "bottom-center", theme: "colored", transition: Flip, autoClose: 4000
+        })
+        navigate('/')
+        emptyCart()
+    }
+
+    const handleDecreaseCart = (itemId) => {
+        // decreaseQuantity(itemId)
+        cart.forEach((item) => {
+            if (item.id === itemId && item.quantity === 1) {
+                removeFromCart(itemId);
+            } else {
+                decreaseQuantity(itemId);
+            }
+        });
+    }
+    if (cart.length === 0) {
+        return (<div className="d-flex flex-column justify-content-center align-items-center vh-100">
+            EMPTY
+        </div>)
     }
     return (<div className="container">
             <h2>Shopping Cart</h2>
@@ -46,7 +70,7 @@ const Cart = ({user, cart, removeFromCart, increaseQuantity, decreaseQuantity, e
                             onClick={() => increaseQuantity(item.id)}>+
                     </button>
                     <button className="btn btn-outline-secondary btn-sm me-2 ps-2 pe-2"
-                            onClick={() => decreaseQuantity(item.id)}>-
+                            onClick={() => handleDecreaseCart(item.id)}>-
                     </button>
                     <button className="btn btn-outline-danger btn-sm "
                             onClick={() => removeFromCart(item.id)}><DeleteIcon/>
@@ -68,7 +92,7 @@ const Cart = ({user, cart, removeFromCart, increaseQuantity, decreaseQuantity, e
 
             <div className="d-grid d-md-flex justify-content-md-end me-5">
                 <button className="btn btn-outline-danger me-md-5"
-                        onClick={() => emptyCart()}>EMPTY
+                        onClick={handleEmptyCart}>EMPTY
                 </button>
             </div>
             <div className="d-grid d-md-flex justify-content-md-center ">
@@ -76,7 +100,7 @@ const Cart = ({user, cart, removeFromCart, increaseQuantity, decreaseQuantity, e
                         onClick={onCheckout}>Proceed to Checkout
                 </button>
             </div>
-            <ToastContainer/>
+
         </div>
 
     );

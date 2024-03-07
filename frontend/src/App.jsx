@@ -8,6 +8,7 @@ import Login from "./pages/Login";
 import Register from "./pages/Register";
 import Payment from "./pages/Payment";
 import Profile from './pages/Profile'
+import {ToastContainer} from 'react-toastify'
 
 function App() {
     return (
@@ -25,6 +26,7 @@ function App() {
                         <Route path='payment' element={<Payment/>}/>
                         <Route path='profile' element={<Profile/>}/>
                     </Routes>
+                    <ToastContainer/>
                 </div>
                 <Footer/>
             </BrowserRouter>
