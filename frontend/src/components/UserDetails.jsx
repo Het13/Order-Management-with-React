@@ -2,12 +2,13 @@ import axios from "axios";
 import {useEffect, useState} from "react";
 import Skeleton, {SkeletonTheme} from 'react-loading-skeleton'
 import 'react-loading-skeleton/dist/skeleton.css'
+import {connect} from "react-redux";
 
-const UserDetails = (props) => {
+const UserDetails = ({user}) => {
 
     const [customerData, setCustomerData] = useState(null)
 
-    const customer_id = props.user.customerId
+    const customer_id = user.customerId
 
     useEffect(() => {
         getCustomerData();
@@ -17,7 +18,7 @@ const UserDetails = (props) => {
         try {
             const response = await axios.get(`/api/v1/customers/${customer_id}`, {
                 headers: {
-                    "Authorization": props.user.jwtToken, 'Content-Type': 'application/json'
+                    "Authorization": user.jwtToken, 'Content-Type': 'application/json'
                 }
             })
             console.log(response.data.customer)
@@ -28,7 +29,7 @@ const UserDetails = (props) => {
     }
 
     if (customerData === null) {
-        return (<div className="col-md-7 col-lg-6 fs-5">
+        return (<>
             <h3 className="mb-3">My Details</h3>
             <SkeletonTheme inline={true}>
                 <SkeletonTheme baseColor="grey" highlightColor="#444" height={30}>
@@ -36,13 +37,13 @@ const UserDetails = (props) => {
                 </SkeletonTheme>
 
             </SkeletonTheme>
-        </div>)
+        </>)
 
     }
-    return (<div className="col-md-7 col-lg-6 fs-5">
+    return (<>
         <h3 className="mb-3">My Details</h3>
         <div className="row">
-            <div className="col-4">
+            <div className="col-5">
                 Email
             </div>
             <div className="col">
@@ -50,7 +51,7 @@ const UserDetails = (props) => {
             </div>
         </div>
         <div className="row">
-            <div className="col-4">
+            <div className="col-5">
                 Name
             </div>
             <div className="col">
@@ -58,7 +59,7 @@ const UserDetails = (props) => {
             </div>
         </div>
         <div className="row">
-            <div className="col-4">
+            <div className="col-5">
                 User Name
             </div>
             <div className="col">
@@ -66,7 +67,7 @@ const UserDetails = (props) => {
             </div>
         </div>
         <div className="row">
-            <div className="col-4">
+            <div className="col-5">
                 Phone Number
             </div>
             <div className="col">
@@ -74,7 +75,7 @@ const UserDetails = (props) => {
             </div>
         </div>
         <div className="row">
-            <div className="col-4">
+            <div className="col-5">
                 Deliver To
             </div>
             <div className="col">
@@ -82,25 +83,27 @@ const UserDetails = (props) => {
             </div>
         </div>
         <div className="row">
-            <div className="col-4"></div>
+            <div className="col-5"></div>
             <div className="col">
                 {customerData.address_line_2}
             </div>
         </div>
         <div className="row">
-            <div className="col-4"></div>
+            <div className="col-5"></div>
             <div className="col">
                 {customerData.city}, {customerData.pincode}
             </div>
         </div>
         <div className="row">
-            <div className="col-4"></div>
+            <div className="col-5"></div>
             <div className="col">
                 {customerData.country}
             </div>
         </div>
-    </div>)
+    </>)
 }
+const mapStateToProps = (state) => ({
+    user: state.user, cart: state.cart.cart
+})
 
-
-export default UserDetails;
+export default connect(mapStateToProps)(UserDetails);

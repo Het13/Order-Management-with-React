@@ -41,7 +41,7 @@ function PaymentForm({onPlaceOrder}) {
                     <label className="form-check-label">UPI</label>
                 </div>
             </div>
-            {paymentMethod === "Credit Cart" && (
+            {paymentMethod === "Credit Card" && (
                 <div className="mb-3">
                     <label htmlFor="cardNumber" className="form-label">Card Number:</label>
                     <input type="text" id="cardNumber" className="form-control"/>
@@ -59,7 +59,7 @@ function PaymentForm({onPlaceOrder}) {
                     <input type="text" id="upiId" className="form-control"/>
                 </div>
             )}
-            <button type="submit" className="btn btn-primary">Submit</button>
+            <button type="submit" className="btn btn-success">Pay</button>
         </form>
     );
 }

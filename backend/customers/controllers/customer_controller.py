@@ -43,8 +43,8 @@ def get_all() -> Tuple[Response, int]:
         return jsonify({"status": "failed", 'message': 'Failed to get customers'}), 500
 
 
-@token_required
-@roles_required('user', 'admin')
+# @token_required
+# @roles_required('user', 'admin')
 def get_orders(id: str) -> Tuple[Response, int]:
     try:
         orders = customer_services.get_orders(customer_id=id)

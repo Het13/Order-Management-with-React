@@ -52,12 +52,16 @@ function Payment({cart, user, emptyCart}) {
     return (<>
         <div className="container p-5">
             <div className="row g-5">
-                <CartBox
-                    cart={cart}
-                />
-                <UserDetails
-                    user={user}
-                />
+                <div className="col-md-7 col-lg-6 fs-5">
+                    <UserDetails
+                        user={user}
+                    />
+                </div>
+                <div className="col-md-5 col-lg-6 order-md-last">
+                    <CartBox
+                        cart={cart}
+                    />
+                </div>
             </div>
 
             <div className="mt-5">

@@ -1,24 +1,19 @@
-import {connect} from "react-redux";
 import UserDetails from "../components/UserDetails";
-import MyOrdersBox from "../components/MyOrdersBox";
+import {Link} from "react-router-dom";
 
-function Profile({user, cart}) {
-    console.log(user)
+function Profile() {
     return (<>
         <div className="container mt-4">
-            <div className="row g-5">
-                <UserDetails
-                    user={user}/>
-                <MyOrdersBox
-                    user={user}
-                />
+            <div className="row">
+                <div className="col-md-7 col-lg-6 fs-5">
+                    <div className="m-3"><UserDetails/>
+                    </div>
+                </div>
             </div>
+            <Link to='/orders' className="btn btn-outline-info w-50 py-2 mt-2">My Orders</Link>
         </div>
     </>)
 }
 
-const mapStateToProps = (state) => ({
-    user: state.user, cart: state.cart.cart
-})
 
-export default connect(mapStateToProps)(Profile);
+export default Profile;

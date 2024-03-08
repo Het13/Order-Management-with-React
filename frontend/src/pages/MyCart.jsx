@@ -41,30 +41,30 @@ const Cart = ({user, cart, removeFromCart, increaseQuantity, decreaseQuantity, e
             EMPTY
         </div>)
     }
-    return (<div className="container">
+    return (<div className="container mt-5">
             <h2>Shopping Cart</h2>
-            <div className="row mt-5 mb-3">
+            <div className="row mt-5 mb-3 ">
                 <div className="col-md-4">
                     <h5>Product</h5>
                 </div>
                 <div className="col-md-2">
                     <h5>Price</h5>
                 </div>
-                <div className="col-md-2">
+                <div className="col-md-1">
                     <h5>Quantity</h5>
                 </div>
-                <div className="col-md-2">
+                <div className="col-md-3 text-center">
                     <h5>Amount</h5>
                 </div>
                 <div className="col-md-2">
                     <h5>Action</h5>
                 </div>
             </div>
-            {cart.map((item) => (<div className="row m-2" key={item.id}>
+            {cart.map((item) => (<div className="row mt-2" key={item.id}>
                 <div className="col-md-4">{item.product}</div>
-                <div className="col-md-2">${item.price}</div>
-                <div className="col-md-2">{item.quantity}</div>
-                <div className="col-md-2">${(item.price * item.quantity).toFixed(2)}</div>
+                <div className="col-md-2">Rs. {item.price}</div>
+                <div className="col-md-1 text-center">{item.quantity}</div>
+                <div className="col-md-3 text-center">Rs. {(item.price * item.quantity).toFixed(2)}</div>
                 <div className="col-md-2">
                     <button className="btn btn-outline-success btn-sm me-2 ps-2 pe-2 "
                             onClick={() => increaseQuantity(item.id)}>+
@@ -81,11 +81,11 @@ const Cart = ({user, cart, removeFromCart, increaseQuantity, decreaseQuantity, e
             </div>))}
             <div className="row mt-3">
                 <div className="col-md-6"></div>
-                <div className="col-md-2">
+                <div className="col-md-2 text-end">
                     <h5>Total:</h5>
                 </div>
                 <div className="col-md-2">
-                    <h5>${totalAmount.toFixed(2)}</h5>
+                    <h5>Rs. {totalAmount.toFixed(2)}</h5>
                 </div>
                 <div className="col-md-2"></div>
             </div>

@@ -1,9 +1,9 @@
-from typing import List, Dict, Tuple
+from typing import List, Dict, Tuple, Any
 
 from sqlalchemy import update, delete, insert, select
 
 from backend.middleware.custom_errors import NotFoundError, DatabaseError
-from backend.models import OrderHeader, engine, OrderItems
+from backend.models import OrderHeader, engine, OrderItems, Product
 
 
 def insert_order(order_data: List[Dict[str, str | int]]) -> int:
@@ -96,18 +96,36 @@ def delete_order(order_id: int) -> None:
         )
         delete_statement = (
             delete(OrderItems)
-            .where(OrderItems.ORDER_ID == 10076)
+            .where(OrderItems.ORDER_ID == order_id)
         )
-
+        print("update", update_statement)
+        print("delete", delete_statement)
         with engine.connect() as connection:
             update_result = connection.execute(update_statement)
             if update_result.rowcount == 0:
                 raise NotFoundError
-
+            print(update_result.rowcount)
             delete_result = connection.execute(delete_statement)
             if delete_result.rowcount == 0:
                 raise NotFoundError
 
             connection.commit()
+    except:
+        raise DatabaseError
+
+
+def select_orders_by_customer_id(customer_id: int) -> List[Tuple[Any]]:
+    try:
+        statement = (
+            select(OrderHeader, OrderItems, Product)
+            .join(OrderItems, OrderHeader.ORDER_ID == OrderItems.ORDER_ID, isouter=True)
+            .join(Product, OrderItems.PRODUCT_ID == Product.PRODUCT_ID, isouter=True)
+            .where(OrderHeader.CUSTOMER_ID == customer_id)
+        )
+        with engine.connect() as connection:
+            orders = connection.execute(statement).fetchall()
+            if orders == []:
+                raise NotFoundError
+        return orders
     except:
         raise DatabaseError

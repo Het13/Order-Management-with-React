@@ -9,10 +9,10 @@ import Register from "./pages/Register";
 import Payment from "./pages/Payment";
 import Profile from './pages/Profile'
 import {ToastContainer} from 'react-toastify'
+import MyOrders from "./pages/MyOrders";
 
 function App() {
-    return (
-        <>
+    return (<>
             <BrowserRouter>
                 <div style={{minHeight: "90vh"}}>
                     <Header/>
@@ -25,13 +25,13 @@ function App() {
                         <Route path='register' element={<Register/>}/>
                         <Route path='payment' element={<Payment/>}/>
                         <Route path='profile' element={<Profile/>}/>
+                        <Route path='orders' element={<MyOrders/>}/>
                     </Routes>
                     <ToastContainer/>
                 </div>
                 <Footer/>
             </BrowserRouter>
-        </>
-    );
+        </>);
 }
 
 export default App;
